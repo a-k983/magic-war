@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://b2s0i23h3ajxp"]
+
+[ext_resource type="Script" uid="uid://b8kairc1li5h4" path="res://scenes/spells/arcane_orbit.gd" id="1_wt4eh"]
+
+[node name="ArcaneOrbit" type="Node2D" unique_id=1809532775]
+script = ExtResource("1_wt4eh")

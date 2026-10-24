@@ -1,0 +1,49 @@
+# Publishes the already-exported Web build (build/web) to GitHub Pages.
+# The Godot export runs on your PC (tools/publish.ps1); exporting here would
+# mean downloading ~1 GB of editor + templates and re-importing every asset
+# on each run. The service-worker patch runs again here as a safety net, in
+# case a build was exported from the editor and committed without it.
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "build/web/**"
+      - "tools/patch_service_worker.py"
+      - ".github/workflows/deploy.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# One deploy at a time; a newer push cancels an older in-progress one.
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check the build exists
+        run: test -f build/web/index.html || { echo "build/web/index.html missing - run tools/publish.ps1"; exit 1; }
+
+      - name: Patch service worker (network-first)
+        run: python3 tools/patch_service_worker.py build/web
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: build/web
+
+      - id: deployment
+        uses: actions/deploy-pages@v4

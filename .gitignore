@@ -1,0 +1,13 @@
+# Godot 4+ specific ignores
+.godot/
+/android/
+
+# build/web IS committed - GitHub Pages publishes it (see .github/workflows).
+# The itch.io zip is a local copy of the same files.
+/build/*.zip
+project.godot.bak
+
+# Third-party art packs: licensed for use in the game, not for redistributing
+# the raw files in a public repo. They still ship inside the exported .pck.
+# Keep your own backup of this folder.
+/scenes/assets/

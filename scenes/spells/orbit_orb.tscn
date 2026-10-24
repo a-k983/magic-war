@@ -1,0 +1,12 @@
+[gd_scene format=3 uid="uid://caapfvkfhcobl"]
+
+[ext_resource type="Script" uid="uid://bumshkbagu2d3" path="res://scenes/spells/orbit_orb.gd" id="1_yt1qn"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_xtm4f"]
+radius = 12.0
+
+[node name="OrbitOrb" type="Area2D" unique_id=1149966431]
+script = ExtResource("1_yt1qn")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1778909540]
+shape = SubResource("CircleShape2D_xtm4f")

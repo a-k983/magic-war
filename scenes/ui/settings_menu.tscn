@@ -1,0 +1,128 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scenes/ui/settings_menu.gd" id="1_settings"]
+[ext_resource type="Texture2D" path="res://scenes/assets/Tiny Swords (Free Pack)/Tiny Swords (Free Pack)/UI Elements/UI Elements/Icons/Icon_10.png" id="2_gear"]
+[ext_resource type="Texture2D" path="res://scenes/assets/Tiny Swords (Free Pack)/Tiny Swords (Free Pack)/UI Elements/UI Elements/Icons/Icon_07.png" id="3_play"]
+[ext_resource type="Texture2D" path="res://scenes/assets/Tiny Swords (Free Pack)/Tiny Swords (Free Pack)/UI Elements/UI Elements/Icons/Icon_08.png" id="4_back"]
+
+[node name="SettingsMenu" type="CanvasLayer"]
+process_mode = 3
+layer = 20
+script = ExtResource("1_settings")
+
+[node name="Dim" type="ColorRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.03, 0.04, 0.08, 0.6)
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="TitleLabel" type="Label" parent="CenterContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_type_variation = &"GoldRibbon"
+text = "SETTINGS"
+horizontal_alignment = 1
+
+[node name="Panel" type="PanelContainer" parent="CenterContainer/VBoxContainer"]
+layout_mode = 2
+theme_type_variation = &"BannerPanel"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/VBoxContainer/Panel"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="DisplayHeader" type="Label" parent="CenterContainer/VBoxContainer/Panel/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 26
+text = "Display"
+horizontal_alignment = 1
+
+[node name="FullscreenButton" type="Button" parent="CenterContainer/VBoxContainer/Panel/VBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(400, 68)
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Fullscreen: Off"
+icon = ExtResource("2_gear")
+
+[node name="Shortcuts" type="Label" parent="CenterContainer/VBoxContainer/Panel/VBoxContainer"]
+layout_mode = 2
+theme_type_variation = &"DarkLabel"
+theme_override_font_sizes/font_size = 19
+text = "F11  or  Alt + Enter   —   toggle fullscreen
+Window maximize button   —   go fullscreen
+Esc   —   open / close this menu"
+horizontal_alignment = 1
+
+[node name="AudioHeader" type="Label" parent="CenterContainer/VBoxContainer/Panel/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 26
+text = "Audio"
+horizontal_alignment = 1
+
+[node name="Volumes" type="GridContainer" parent="CenterContainer/VBoxContainer/Panel/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/h_separation = 16
+columns = 2
+
+[node name="MusicLabel" type="Label" parent="CenterContainer/VBoxContainer/Panel/VBoxContainer/Volumes"]
+layout_mode = 2
+theme_type_variation = &"DarkLabel"
+text = "Music"
+
+[node name="MusicSlider" type="HSlider" parent="CenterContainer/VBoxContainer/Panel/VBoxContainer/Volumes"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(280, 32)
+layout_mode = 2
+size_flags_vertical = 4
+max_value = 1.0
+step = 0.05
+value = 1.0
+
+[node name="SfxLabel" type="Label" parent="CenterContainer/VBoxContainer/Panel/VBoxContainer/Volumes"]
+layout_mode = 2
+theme_type_variation = &"DarkLabel"
+text = "Effects"
+
+[node name="SfxSlider" type="HSlider" parent="CenterContainer/VBoxContainer/Panel/VBoxContainer/Volumes"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(280, 32)
+layout_mode = 2
+size_flags_vertical = 4
+max_value = 1.0
+step = 0.05
+value = 1.0
+
+[node name="Buttons" type="HBoxContainer" parent="CenterContainer/VBoxContainer/Panel/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 16
+alignment = 1
+
+[node name="ResumeButton" type="Button" parent="CenterContainer/VBoxContainer/Panel/VBoxContainer/Buttons"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(220, 68)
+layout_mode = 2
+text = "Resume"
+icon = ExtResource("3_play")
+
+[node name="MainMenuButton" type="Button" parent="CenterContainer/VBoxContainer/Panel/VBoxContainer/Buttons"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(220, 68)
+layout_mode = 2
+theme_type_variation = &"RedButton"
+text = "Main Menu"
+icon = ExtResource("4_back")

@@ -1,0 +1,107 @@
+[gd_scene format=3 uid="uid://imqi4h1ufhe2"]
+
+[ext_resource type="Script" uid="uid://csid20uuqy5ye" path="res://scenes/ui/title_screen.gd" id="1_eb34j"]
+[ext_resource type="Texture2D" uid="uid://cryhyeg6nx81m" path="res://scenes/assets/Tiny Swords (Free Pack)/Tiny Swords (Free Pack)/Terrain/Tileset/Tilemap_color5_single_grazz_tile.png" id="2_grass"]
+[ext_resource type="Texture2D" path="res://scenes/assets/Tiny Swords (Free Pack)/Tiny Swords (Free Pack)/UI Elements/UI Elements/Icons/Icon_03.png" id="3_coin"]
+[ext_resource type="Texture2D" path="res://scenes/assets/Tiny Swords (Free Pack)/Tiny Swords (Free Pack)/UI Elements/UI Elements/Icons/Icon_07.png" id="4_play"]
+[ext_resource type="Texture2D" path="res://scenes/assets/Tiny Swords (Free Pack)/Tiny Swords (Free Pack)/UI Elements/UI Elements/Icons/Icon_01.png" id="5_hammer"]
+[ext_resource type="Texture2D" path="res://scenes/assets/Tiny Swords (Free Pack)/Tiny Swords (Free Pack)/UI Elements/UI Elements/Icons/Icon_10.png" id="6_gear"]
+[ext_resource type="Texture2D" path="res://scenes/assets/Tiny Swords (Free Pack)/Tiny Swords (Free Pack)/UI Elements/UI Elements/Icons/Icon_05.png" id="7_sword"]
+
+[node name="TitleScreen" type="Control" unique_id=1102767414]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_eb34j")
+
+[node name="Background" type="TextureRect" parent="."]
+modulate = Color(0.55, 0.6, 0.4, 1)
+texture_repeat = 2
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_grass")
+stretch_mode = 1
+
+[node name="CenterContainer" type="CenterContainer" parent="." unique_id=1638358446]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer" unique_id=1127673334]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="TitleLabel" type="Label" parent="CenterContainer/VBoxContainer" unique_id=1486984886]
+layout_mode = 2
+theme_type_variation = &"TitleRibbon"
+text = "MAGIC WAR"
+horizontal_alignment = 1
+
+[node name="Menu" type="PanelContainer" parent="CenterContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_type_variation = &"BannerPanel"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/VBoxContainer/Menu"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="CoinsRow" type="HBoxContainer" parent="CenterContainer/VBoxContainer/Menu/VBoxContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="CoinIcon" type="TextureRect" parent="CenterContainer/VBoxContainer/Menu/VBoxContainer/CoinsRow"]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+texture = ExtResource("3_coin")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="CoinsLabel" type="Label" parent="CenterContainer/VBoxContainer/Menu/VBoxContainer/CoinsRow" unique_id=1533469053]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"DarkLabel"
+theme_override_font_sizes/font_size = 28
+text = "Coins: 0"
+
+[node name="PlayButton" type="Button" parent="CenterContainer/VBoxContainer/Menu/VBoxContainer" unique_id=333314899]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(360, 66)
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+text = "Play"
+icon = ExtResource("4_play")
+
+[node name="EndlessButton" type="Button" parent="CenterContainer/VBoxContainer/Menu/VBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(360, 66)
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+text = "Endless"
+icon = ExtResource("7_sword")
+
+[node name="UpgradesButton" type="Button" parent="CenterContainer/VBoxContainer/Menu/VBoxContainer" unique_id=1889855212]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(360, 66)
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+text = "Upgrades"
+icon = ExtResource("5_hammer")
+
+[node name="SettingsButton" type="Button" parent="CenterContainer/VBoxContainer/Menu/VBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(360, 66)
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+text = "Settings"
+icon = ExtResource("6_gear")

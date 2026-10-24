@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+  <g stroke="#1f2a3c" stroke-width="4" stroke-linejoin="round" stroke-linecap="round">
+    <!-- cork -->
+    <rect x="25" y="4" width="14" height="10" rx="2" fill="#b98554"/>
+    <!-- glass neck + round body -->
+    <path d="M24 14h16v8.800a19 19 0 1 1-16 0z" fill="#e8f1f5"/>
+    <!-- red liquid -->
+    <path d="M17 36h30a15.500 15.500 0 1 1-30 0z" fill="#e23b3b" stroke="none"/>
+    <path d="M17 36h30" fill="none" stroke="#a81f2c" stroke-width="3"/>
+    <!-- lip of the bottle -->
+    <rect x="21" y="12" width="22" height="6" rx="2" fill="#cfdde3"/>
+  </g>
+  <!-- highlights -->
+  <path d="M21 44a12 12 0 0 0 6 9" fill="none" stroke="#ff9a8f" stroke-width="4" stroke-linecap="round"/>
+  <circle cx="38" cy="45" r="3" fill="#ff8a80"/>
+</svg>

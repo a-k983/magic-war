@@ -1,0 +1,383 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scenes/world/world.gd" id="1_world"]
+[ext_resource type="Script" path="res://scenes/world/prop.gd" id="2_prop"]
+
+[node name="World" type="Node2D"]
+y_sort_enabled = true
+script = ExtResource("1_world")
+
+[node name="Castle" type="StaticBody2D" parent="."]
+position = Vector2(0, -470)
+script = ExtResource("2_prop")
+kind = "castle"
+
+[node name="CastleTowerW" type="StaticBody2D" parent="."]
+position = Vector2(-235, -440)
+script = ExtResource("2_prop")
+kind = "tower"
+
+[node name="CastleTowerE" type="StaticBody2D" parent="."]
+position = Vector2(235, -440)
+script = ExtResource("2_prop")
+kind = "tower"
+
+[node name="VillageHouse1" type="StaticBody2D" parent="."]
+position = Vector2(-420, -300)
+script = ExtResource("2_prop")
+kind = "house1"
+
+[node name="VillageHouse2" type="StaticBody2D" parent="."]
+position = Vector2(430, -290)
+script = ExtResource("2_prop")
+kind = "house2"
+
+[node name="VillageHouse3" type="StaticBody2D" parent="."]
+position = Vector2(-620, -520)
+script = ExtResource("2_prop")
+kind = "house3"
+
+[node name="VillageHouse4" type="StaticBody2D" parent="."]
+position = Vector2(640, -530)
+script = ExtResource("2_prop")
+kind = "house1"
+
+[node name="VillageHouse5" type="StaticBody2D" parent="."]
+position = Vector2(-380, -700)
+script = ExtResource("2_prop")
+kind = "house3"
+
+[node name="VillageHouse6" type="StaticBody2D" parent="."]
+position = Vector2(400, -720)
+script = ExtResource("2_prop")
+kind = "house2"
+
+[node name="VillageBush1" type="StaticBody2D" parent="."]
+position = Vector2(-170, -300)
+script = ExtResource("2_prop")
+kind = "bush1"
+
+[node name="VillageBush2" type="StaticBody2D" parent="."]
+position = Vector2(180, -300)
+script = ExtResource("2_prop")
+kind = "bush2"
+
+[node name="Barracks" type="StaticBody2D" parent="."]
+position = Vector2(1000, 80)
+script = ExtResource("2_prop")
+kind = "barracks"
+
+[node name="Archery" type="StaticBody2D" parent="."]
+position = Vector2(1300, -180)
+script = ExtResource("2_prop")
+kind = "archery"
+
+[node name="CampTower1" type="StaticBody2D" parent="."]
+position = Vector2(1350, 280)
+script = ExtResource("2_prop")
+kind = "tower"
+
+[node name="CampTower2" type="StaticBody2D" parent="."]
+position = Vector2(760, -150)
+script = ExtResource("2_prop")
+kind = "tower"
+
+[node name="CampRock1" type="StaticBody2D" parent="."]
+position = Vector2(1150, 330)
+script = ExtResource("2_prop")
+kind = "rock3"
+
+[node name="CampRock2" type="StaticBody2D" parent="."]
+position = Vector2(880, 300)
+script = ExtResource("2_prop")
+kind = "rock1"
+
+[node name="Monastery" type="StaticBody2D" parent="."]
+position = Vector2(0, 950)
+script = ExtResource("2_prop")
+kind = "monastery"
+
+[node name="MonkHouse1" type="StaticBody2D" parent="."]
+position = Vector2(-280, 860)
+script = ExtResource("2_prop")
+kind = "house3"
+
+[node name="MonkHouse2" type="StaticBody2D" parent="."]
+position = Vector2(290, 870)
+script = ExtResource("2_prop")
+kind = "house2"
+
+[node name="MonasteryBush1" type="StaticBody2D" parent="."]
+position = Vector2(-120, 1020)
+script = ExtResource("2_prop")
+kind = "bush3"
+
+[node name="MonasteryBush2" type="StaticBody2D" parent="."]
+position = Vector2(140, 1030)
+script = ExtResource("2_prop")
+kind = "bush1"
+
+[node name="FarmHouse" type="StaticBody2D" parent="."]
+position = Vector2(-1150, 60)
+script = ExtResource("2_prop")
+kind = "house1"
+
+[node name="FarmHouse2" type="StaticBody2D" parent="."]
+position = Vector2(-1350, 220)
+script = ExtResource("2_prop")
+kind = "house2"
+
+[node name="Sheep1" type="StaticBody2D" parent="."]
+position = Vector2(-900, 260)
+script = ExtResource("2_prop")
+kind = "sheep"
+
+[node name="Sheep2" type="StaticBody2D" parent="."]
+position = Vector2(-980, 330)
+script = ExtResource("2_prop")
+kind = "sheep_grazing"
+
+[node name="Sheep3" type="StaticBody2D" parent="."]
+position = Vector2(-850, 380)
+script = ExtResource("2_prop")
+kind = "sheep"
+
+[node name="Sheep4" type="StaticBody2D" parent="."]
+position = Vector2(-1060, 420)
+script = ExtResource("2_prop")
+kind = "sheep_grazing"
+
+[node name="Sheep5" type="StaticBody2D" parent="."]
+position = Vector2(-940, 470)
+script = ExtResource("2_prop")
+kind = "sheep"
+
+[node name="FarmStump" type="StaticBody2D" parent="."]
+position = Vector2(-1250, 420)
+script = ExtResource("2_prop")
+kind = "stump"
+
+[node name="GoldStone1" type="StaticBody2D" parent="."]
+position = Vector2(1450, -1150)
+script = ExtResource("2_prop")
+kind = "gold_stone"
+
+[node name="GoldStone2" type="StaticBody2D" parent="."]
+position = Vector2(1560, -1080)
+script = ExtResource("2_prop")
+kind = "gold_stone2"
+
+[node name="GoldStone3" type="StaticBody2D" parent="."]
+position = Vector2(1380, -1020)
+script = ExtResource("2_prop")
+kind = "gold_stone"
+
+[node name="GoldStone4" type="StaticBody2D" parent="."]
+position = Vector2(1520, -960)
+script = ExtResource("2_prop")
+kind = "gold_stone2"
+
+[node name="MineRock1" type="StaticBody2D" parent="."]
+position = Vector2(1650, -1200)
+script = ExtResource("2_prop")
+kind = "rock2"
+
+[node name="MineRock2" type="StaticBody2D" parent="."]
+position = Vector2(1300, -1120)
+script = ExtResource("2_prop")
+kind = "rock4"
+
+[node name="FarTowerNW" type="StaticBody2D" parent="."]
+position = Vector2(-1800, -1700)
+script = ExtResource("2_prop")
+kind = "tower"
+
+[node name="FarTowerSE" type="StaticBody2D" parent="."]
+position = Vector2(1800, 1750)
+script = ExtResource("2_prop")
+kind = "tower"
+
+[node name="FarHouseSW" type="StaticBody2D" parent="."]
+position = Vector2(-1700, 1600)
+script = ExtResource("2_prop")
+kind = "house3"
+
+[node name="Grove1Tree1" type="StaticBody2D" parent="."]
+position = Vector2(-1450, -950)
+script = ExtResource("2_prop")
+kind = "tree1"
+
+[node name="Grove1Tree2" type="StaticBody2D" parent="."]
+position = Vector2(-1360, -910)
+script = ExtResource("2_prop")
+kind = "tree2"
+
+[node name="Grove1Tree3" type="StaticBody2D" parent="."]
+position = Vector2(-1530, -900)
+script = ExtResource("2_prop")
+kind = "tree3"
+
+[node name="Grove1Tree4" type="StaticBody2D" parent="."]
+position = Vector2(-1420, -1020)
+script = ExtResource("2_prop")
+kind = "tree4"
+
+[node name="Grove1Tree5" type="StaticBody2D" parent="."]
+position = Vector2(-1490, -840)
+script = ExtResource("2_prop")
+kind = "tree1"
+
+[node name="Grove1Tree6" type="StaticBody2D" parent="."]
+position = Vector2(-1330, -980)
+script = ExtResource("2_prop")
+kind = "tree2"
+
+[node name="Grove2Tree1" type="StaticBody2D" parent="."]
+position = Vector2(1550, 1250)
+script = ExtResource("2_prop")
+kind = "tree2"
+
+[node name="Grove2Tree2" type="StaticBody2D" parent="."]
+position = Vector2(1640, 1290)
+script = ExtResource("2_prop")
+kind = "tree3"
+
+[node name="Grove2Tree3" type="StaticBody2D" parent="."]
+position = Vector2(1470, 1300)
+script = ExtResource("2_prop")
+kind = "tree4"
+
+[node name="Grove2Tree4" type="StaticBody2D" parent="."]
+position = Vector2(1580, 1180)
+script = ExtResource("2_prop")
+kind = "tree1"
+
+[node name="Grove2Tree5" type="StaticBody2D" parent="."]
+position = Vector2(1510, 1360)
+script = ExtResource("2_prop")
+kind = "tree2"
+
+[node name="Grove2Tree6" type="StaticBody2D" parent="."]
+position = Vector2(1670, 1220)
+script = ExtResource("2_prop")
+kind = "tree3"
+
+[node name="Grove3Tree1" type="StaticBody2D" parent="."]
+position = Vector2(-1350, 1150)
+script = ExtResource("2_prop")
+kind = "tree3"
+
+[node name="Grove3Tree2" type="StaticBody2D" parent="."]
+position = Vector2(-1260, 1190)
+script = ExtResource("2_prop")
+kind = "tree4"
+
+[node name="Grove3Tree3" type="StaticBody2D" parent="."]
+position = Vector2(-1430, 1200)
+script = ExtResource("2_prop")
+kind = "tree1"
+
+[node name="Grove3Tree4" type="StaticBody2D" parent="."]
+position = Vector2(-1320, 1080)
+script = ExtResource("2_prop")
+kind = "tree2"
+
+[node name="Grove3Tree5" type="StaticBody2D" parent="."]
+position = Vector2(-1390, 1260)
+script = ExtResource("2_prop")
+kind = "tree3"
+
+[node name="Grove3Tree6" type="StaticBody2D" parent="."]
+position = Vector2(-1230, 1120)
+script = ExtResource("2_prop")
+kind = "tree4"
+
+[node name="Grove4Tree1" type="StaticBody2D" parent="."]
+position = Vector2(650, 1750)
+script = ExtResource("2_prop")
+kind = "tree4"
+
+[node name="Grove4Tree2" type="StaticBody2D" parent="."]
+position = Vector2(740, 1790)
+script = ExtResource("2_prop")
+kind = "tree1"
+
+[node name="Grove4Tree3" type="StaticBody2D" parent="."]
+position = Vector2(570, 1800)
+script = ExtResource("2_prop")
+kind = "tree2"
+
+[node name="Grove4Tree4" type="StaticBody2D" parent="."]
+position = Vector2(680, 1680)
+script = ExtResource("2_prop")
+kind = "tree3"
+
+[node name="Grove4Tree5" type="StaticBody2D" parent="."]
+position = Vector2(610, 1860)
+script = ExtResource("2_prop")
+kind = "tree4"
+
+[node name="Grove4Tree6" type="StaticBody2D" parent="."]
+position = Vector2(770, 1720)
+script = ExtResource("2_prop")
+kind = "tree1"
+
+[node name="Grove5Tree1" type="StaticBody2D" parent="."]
+position = Vector2(-600, -1650)
+script = ExtResource("2_prop")
+kind = "tree1"
+
+[node name="Grove5Tree2" type="StaticBody2D" parent="."]
+position = Vector2(-510, -1610)
+script = ExtResource("2_prop")
+kind = "tree2"
+
+[node name="Grove5Tree3" type="StaticBody2D" parent="."]
+position = Vector2(-680, -1600)
+script = ExtResource("2_prop")
+kind = "tree3"
+
+[node name="Grove5Tree4" type="StaticBody2D" parent="."]
+position = Vector2(-570, -1720)
+script = ExtResource("2_prop")
+kind = "tree4"
+
+[node name="Grove5Tree5" type="StaticBody2D" parent="."]
+position = Vector2(-640, -1540)
+script = ExtResource("2_prop")
+kind = "tree1"
+
+[node name="Grove5Tree6" type="StaticBody2D" parent="."]
+position = Vector2(-480, -1680)
+script = ExtResource("2_prop")
+kind = "tree2"
+
+[node name="Grove6Tree1" type="StaticBody2D" parent="."]
+position = Vector2(1900, -300)
+script = ExtResource("2_prop")
+kind = "tree2"
+
+[node name="Grove6Tree2" type="StaticBody2D" parent="."]
+position = Vector2(1990, -260)
+script = ExtResource("2_prop")
+kind = "tree3"
+
+[node name="Grove6Tree3" type="StaticBody2D" parent="."]
+position = Vector2(1820, -250)
+script = ExtResource("2_prop")
+kind = "tree4"
+
+[node name="Grove6Tree4" type="StaticBody2D" parent="."]
+position = Vector2(1930, -370)
+script = ExtResource("2_prop")
+kind = "tree1"
+
+[node name="Grove6Tree5" type="StaticBody2D" parent="."]
+position = Vector2(1860, -190)
+script = ExtResource("2_prop")
+kind = "tree2"
+
+[node name="Grove6Tree6" type="StaticBody2D" parent="."]
+position = Vector2(2020, -330)
+script = ExtResource("2_prop")
+kind = "tree3"

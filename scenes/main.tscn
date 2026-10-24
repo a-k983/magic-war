@@ -1,0 +1,332 @@
+[gd_scene format=3 uid="uid://cemt3ulxevbn6"]
+
+[ext_resource type="Script" uid="uid://c07vgs4m0wbb6" path="res://scenes/main.gd" id="1_0wfyh"]
+[ext_resource type="PackedScene" uid="uid://lwtj8pmm680h" path="res://scenes/player/player.tscn" id="1_o5qli"]
+[ext_resource type="Script" uid="uid://bopi3jsqixqso" path="res://scenes/ui/level_up_menu.gd" id="4_jyhfs"]
+[ext_resource type="Script" uid="uid://bgqja76lp4vjk" path="res://scenes/ui/game_over_screen.gd" id="5_tbgi4"]
+[ext_resource type="Texture2D" uid="uid://cryhyeg6nx81m" path="res://scenes/assets/Tiny Swords (Free Pack)/Tiny Swords (Free Pack)/Terrain/Tileset/Tilemap_color5_single_grazz_tile.png" id="5_tefeu"]
+[ext_resource type="Texture2D" uid="uid://dok5q3y320hds" path="res://scenes/ui/skin/bar_big.png" id="6_barbig"]
+[ext_resource type="Texture2D" uid="uid://botikuu6rsd1m" path="res://scenes/ui/skin/bar_small.png" id="7_barsmall"]
+[ext_resource type="Texture2D" uid="uid://cjguq3w55134y" path="res://scenes/assets/Tiny Swords (Free Pack)/Tiny Swords (Free Pack)/UI Elements/UI Elements/Icons/Icon_04.png" id="8_meat"]
+[ext_resource type="Texture2D" uid="uid://b51m2ctbcrv7u" path="res://scenes/assets/Tiny Swords (Free Pack)/Tiny Swords (Free Pack)/UI Elements/UI Elements/Icons/Icon_07.png" id="9_play"]
+[ext_resource type="Texture2D" uid="uid://hrov7if1f2hx" path="res://scenes/assets/Tiny Swords (Free Pack)/Tiny Swords (Free Pack)/UI Elements/UI Elements/Icons/Icon_08.png" id="10_back"]
+[ext_resource type="PackedScene" path="res://scenes/world/world.tscn" id="11_world"]
+[ext_resource type="Texture2D" uid="uid://cqadw8i58a8ce" path="res://scenes/assets/Tiny Swords (Free Pack)/Tiny Swords (Free Pack)/UI Elements/UI Elements/Icons/Icon_03.png" id="12_coin"]
+[ext_resource type="Script" path="res://scenes/ui/virtual_joystick.gd" id="13_joystick"]
+
+[node name="Main" type="Node2D" unique_id=1542773792]
+y_sort_enabled = true
+script = ExtResource("1_0wfyh")
+
+[node name="World" parent="." unique_id=33558692 instance=ExtResource("11_world")]
+
+[node name="Player" parent="." unique_id=1256454517 instance=ExtResource("1_o5qli")]
+
+[node name="Timer" type="Timer" parent="." unique_id=848666463]
+autostart = true
+
+[node name="HUD" type="CanvasLayer" parent="." unique_id=1805399840]
+
+[node name="Joystick" type="Control" parent="HUD"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("13_joystick")
+
+[node name="PauseButton" type="Button" parent="HUD"]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -88.0
+offset_top = 90.0
+offset_right = -20.0
+offset_bottom = 158.0
+grow_horizontal = 0
+focus_mode = 0
+theme_override_font_sizes/font_size = 30
+text = "II"
+
+[node name="XPBar" type="ProgressBar" parent="HUD" unique_id=1771773048]
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 16.0
+offset_top = 10.0
+offset_right = -16.0
+offset_bottom = 16.0
+grow_horizontal = 2
+theme_type_variation = &"XPBar"
+show_percentage = false
+
+[node name="Frame" type="NinePatchRect" parent="HUD/XPBar" unique_id=317542592]
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -10.0
+offset_top = -8.0
+offset_right = 10.0
+offset_bottom = 5.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("7_barsmall")
+patch_margin_left = 15
+patch_margin_right = 15
+
+[node name="HPIcon" type="TextureRect" parent="HUD" unique_id=506276563]
+offset_left = 12.0
+offset_top = 32.0
+offset_right = 60.0
+offset_bottom = 80.0
+texture = ExtResource("8_meat")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="HPBar" type="ProgressBar" parent="HUD" unique_id=1101689396]
+offset_left = 72.0
+offset_top = 46.0
+offset_right = 332.0
+offset_bottom = 69.0
+show_percentage = false
+
+[node name="Frame" type="NinePatchRect" parent="HUD/HPBar" unique_id=404881901]
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -11.0
+offset_top = -12.0
+offset_right = 11.0
+offset_bottom = 16.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("6_barbig")
+patch_margin_left = 24
+patch_margin_right = 24
+
+[node name="LevelLabel" type="Label" parent="HUD" unique_id=294886897]
+offset_left = 14.0
+offset_top = 90.0
+offset_right = 154.0
+offset_bottom = 150.0
+theme_type_variation = &"LevelRibbon"
+text = "Level 1"
+horizontal_alignment = 1
+
+[node name="TimerLabel" type="Label" parent="HUD" unique_id=128186558]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -90.0
+offset_top = 26.0
+offset_right = 90.0
+offset_bottom = 86.0
+grow_horizontal = 2
+theme_type_variation = &"TimerRibbon"
+text = "00:00"
+horizontal_alignment = 1
+
+[node name="GoldCounter" type="HBoxContainer" parent="HUD" unique_id=2130145399]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -216.0
+offset_top = 30.0
+offset_right = -20.0
+offset_bottom = 78.0
+grow_horizontal = 0
+alignment = 2
+
+[node name="CoinIcon" type="TextureRect" parent="HUD/GoldCounter" unique_id=322729594]
+custom_minimum_size = Vector2(44, 44)
+layout_mode = 2
+texture = ExtResource("12_coin")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="GoldLabel" type="Label" parent="HUD/GoldCounter" unique_id=217050693]
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "0"
+
+[node name="LevelUpMenu" type="CanvasLayer" parent="." unique_id=1069144345]
+process_mode = 3
+script = ExtResource("4_jyhfs")
+
+[node name="ColorRect" type="ColorRect" parent="LevelUpMenu" unique_id=2014336633]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.03, 0.04, 0.08, 0.55)
+
+[node name="CenterContainer" type="CenterContainer" parent="LevelUpMenu" unique_id=416315684]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="LevelUpMenu/CenterContainer" unique_id=69570287]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="TitleLabel" type="Label" parent="LevelUpMenu/CenterContainer/VBoxContainer" unique_id=1802787916]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_type_variation = &"GoldRibbon"
+text = "LEVEL UP!"
+horizontal_alignment = 1
+
+[node name="Panel" type="PanelContainer" parent="LevelUpMenu/CenterContainer/VBoxContainer" unique_id=602769661]
+layout_mode = 2
+theme_type_variation = &"WoodPanel"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="LevelUpMenu/CenterContainer/VBoxContainer/Panel" unique_id=1137559182]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Subtitle" type="Label" parent="LevelUpMenu/CenterContainer/VBoxContainer/Panel/VBoxContainer" unique_id=1013181125]
+layout_mode = 2
+text = "Choose an upgrade"
+horizontal_alignment = 1
+
+[node name="Option1" type="Button" parent="LevelUpMenu/CenterContainer/VBoxContainer/Panel/VBoxContainer" unique_id=1816990933]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(460, 84)
+layout_mode = 2
+
+[node name="Option2" type="Button" parent="LevelUpMenu/CenterContainer/VBoxContainer/Panel/VBoxContainer" unique_id=1420132925]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(460, 84)
+layout_mode = 2
+
+[node name="Option3" type="Button" parent="LevelUpMenu/CenterContainer/VBoxContainer/Panel/VBoxContainer" unique_id=1924626244]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(460, 84)
+layout_mode = 2
+
+[node name="GameOverScreen" type="CanvasLayer" parent="." unique_id=530461004]
+process_mode = 3
+script = ExtResource("5_tbgi4")
+
+[node name="Panel" type="Control" parent="GameOverScreen" unique_id=136223158]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ColorRect" type="ColorRect" parent="GameOverScreen/Panel" unique_id=896478597]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.03, 0.04, 0.08, 0.6)
+
+[node name="CenterContainer" type="CenterContainer" parent="GameOverScreen/Panel" unique_id=187700092]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Banner" type="PanelContainer" parent="GameOverScreen/Panel/CenterContainer" unique_id=1360368444]
+layout_mode = 2
+theme_type_variation = &"BannerPanel"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="GameOverScreen/Panel/CenterContainer/Banner" unique_id=276304298]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="ResultLabel" type="Label" parent="GameOverScreen/Panel/CenterContainer/Banner/VBoxContainer" unique_id=1036653623]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"HeadingLabel"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="StatsLabel" type="Label" parent="GameOverScreen/Panel/CenterContainer/Banner/VBoxContainer" unique_id=2019540065]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"DarkLabel"
+text = "Level 1   ·   0 gold earned"
+horizontal_alignment = 1
+
+[node name="Recap" type="HBoxContainer" parent="GameOverScreen/Panel/CenterContainer/Banner/VBoxContainer" unique_id=1934748666]
+layout_mode = 2
+theme_override_constants/separation = 60
+alignment = 1
+
+[node name="Weapons" type="VBoxContainer" parent="GameOverScreen/Panel/CenterContainer/Banner/VBoxContainer/Recap" unique_id=208324373]
+layout_mode = 2
+
+[node name="Header" type="Label" parent="GameOverScreen/Panel/CenterContainer/Banner/VBoxContainer/Recap/Weapons" unique_id=894386150]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Weapons"
+
+[node name="WeaponsList" type="VBoxContainer" parent="GameOverScreen/Panel/CenterContainer/Banner/VBoxContainer/Recap/Weapons" unique_id=2143287410]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="Upgrades" type="VBoxContainer" parent="GameOverScreen/Panel/CenterContainer/Banner/VBoxContainer/Recap" unique_id=569154425]
+layout_mode = 2
+
+[node name="Header" type="Label" parent="GameOverScreen/Panel/CenterContainer/Banner/VBoxContainer/Recap/Upgrades" unique_id=797960907]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Upgrades"
+
+[node name="UpgradesList" type="VBoxContainer" parent="GameOverScreen/Panel/CenterContainer/Banner/VBoxContainer/Recap/Upgrades" unique_id=1160739121]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="Buttons" type="HBoxContainer" parent="GameOverScreen/Panel/CenterContainer/Banner/VBoxContainer" unique_id=1035801887]
+layout_mode = 2
+theme_override_constants/separation = 16
+alignment = 1
+
+[node name="RestartButton" type="Button" parent="GameOverScreen/Panel/CenterContainer/Banner/VBoxContainer/Buttons" unique_id=1943767392]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(260, 72)
+layout_mode = 2
+text = "Play Again"
+icon = ExtResource("9_play")
+
+[node name="MenuButton" type="Button" parent="GameOverScreen/Panel/CenterContainer/Banner/VBoxContainer/Buttons" unique_id=1774473690]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(260, 72)
+layout_mode = 2
+theme_type_variation = &"RedButton"
+text = "Main Menu"
+icon = ExtResource("10_back")
+
+[node name="Ground" type="Sprite2D" parent="." unique_id=501525536]
+modulate = Color(0.55, 0.6, 0.4, 1)
+z_index = -10
+texture_repeat = 2
+position = Vector2(128, -112)
+texture = ExtResource("5_tefeu")
+region_enabled = true
+region_rect = Rect2(0, 0, 500000, 500000)
+
+[node name="Ground" type="Sprite2D" parent="Ground" unique_id=1697538637]
+modulate = Color(0.55, 0.6, 0.4, 1)
+z_index = -10
+texture_repeat = 2
+position = Vector2(128, -112)
+texture = ExtResource("5_tefeu")
+region_enabled = true
+region_rect = Rect2(0, 0, 500000, 500000)

@@ -1,0 +1,122 @@
+[gd_scene format=3 uid="uid://y2hrjxgj0sg2"]
+
+[ext_resource type="Script" uid="uid://day25q34lcm2d" path="res://scenes/ui/upgrade_shop.gd" id="1_54ydb"]
+[ext_resource type="Texture2D" uid="uid://cryhyeg6nx81m" path="res://scenes/assets/Tiny Swords (Free Pack)/Tiny Swords (Free Pack)/Terrain/Tileset/Tilemap_color5_single_grazz_tile.png" id="2_grass"]
+[ext_resource type="Texture2D" path="res://scenes/assets/Tiny Swords (Free Pack)/Tiny Swords (Free Pack)/UI Elements/UI Elements/Icons/Icon_03.png" id="3_coin"]
+[ext_resource type="Texture2D" path="res://scenes/assets/Tiny Swords (Free Pack)/Tiny Swords (Free Pack)/UI Elements/UI Elements/Icons/Icon_04.png" id="4_meat"]
+[ext_resource type="Texture2D" path="res://scenes/assets/Tiny Swords (Free Pack)/Tiny Swords (Free Pack)/UI Elements/UI Elements/Icons/Icon_05.png" id="5_sword"]
+[ext_resource type="Texture2D" path="res://scenes/assets/Tiny Swords (Free Pack)/Tiny Swords (Free Pack)/UI Elements/UI Elements/Icons/Icon_07.png" id="6_arrow"]
+[ext_resource type="Texture2D" path="res://scenes/assets/Tiny Swords (Free Pack)/Tiny Swords (Free Pack)/UI Elements/UI Elements/Icons/Icon_08.png" id="7_back"]
+
+[node name="UpgradeShop" type="Control" unique_id=976639138]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_54ydb")
+
+[node name="Background" type="TextureRect" parent="."]
+modulate = Color(0.55, 0.6, 0.4, 1)
+texture_repeat = 2
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_grass")
+stretch_mode = 1
+
+[node name="CenterContainer" type="CenterContainer" parent="." unique_id=1409173775]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer" unique_id=767014478]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="TitleLabel" type="Label" parent="CenterContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_type_variation = &"GoldRibbon"
+text = "UPGRADES"
+horizontal_alignment = 1
+
+[node name="Shop" type="PanelContainer" parent="CenterContainer/VBoxContainer"]
+layout_mode = 2
+theme_type_variation = &"BannerPanel"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/VBoxContainer/Shop"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="CoinsRow" type="HBoxContainer" parent="CenterContainer/VBoxContainer/Shop/VBoxContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="CoinIcon" type="TextureRect" parent="CenterContainer/VBoxContainer/Shop/VBoxContainer/CoinsRow"]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+texture = ExtResource("3_coin")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="CoinsLabel" type="Label" parent="CenterContainer/VBoxContainer/Shop/VBoxContainer/CoinsRow" unique_id=1671150311]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"DarkLabel"
+theme_override_font_sizes/font_size = 28
+text = "Coins: 0"
+
+[node name="Upgrades" type="GridContainer" parent="CenterContainer/VBoxContainer/Shop/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/h_separation = 10
+theme_override_constants/v_separation = 10
+columns = 2
+
+[node name="HpButton" type="Button" parent="CenterContainer/VBoxContainer/Shop/VBoxContainer/Upgrades" unique_id=1703843012]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(420, 84)
+layout_mode = 2
+text = "Vitality"
+icon = ExtResource("4_meat")
+alignment = 0
+
+[node name="DamageButton" type="Button" parent="CenterContainer/VBoxContainer/Shop/VBoxContainer/Upgrades" unique_id=1652877875]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(420, 84)
+layout_mode = 2
+text = "Power"
+icon = ExtResource("5_sword")
+alignment = 0
+
+[node name="SpeedButton" type="Button" parent="CenterContainer/VBoxContainer/Shop/VBoxContainer/Upgrades" unique_id=1280747711]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(420, 84)
+layout_mode = 2
+text = "Agility"
+icon = ExtResource("6_arrow")
+alignment = 0
+
+[node name="CoinButton" type="Button" parent="CenterContainer/VBoxContainer/Shop/VBoxContainer/Upgrades" unique_id=610582865]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(420, 84)
+layout_mode = 2
+text = "Greed"
+icon = ExtResource("3_coin")
+alignment = 0
+
+[node name="BackButton" type="Button" parent="CenterContainer/VBoxContainer/Shop/VBoxContainer" unique_id=1586481697]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(240, 68)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_type_variation = &"RedButton"
+text = "Back"
+icon = ExtResource("7_back")

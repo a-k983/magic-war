@@ -1,0 +1,230 @@
+[gd_resource type="Theme" format=3 uid="uid://befothjxi4b5v"]
+
+[ext_resource type="Texture2D" uid="uid://dqoslmv261e6x" path="res://scenes/ui/skin/button_blue.png" id="1_btn_blue"]
+[ext_resource type="Texture2D" uid="uid://w5qq8clq4aq7" path="res://scenes/ui/skin/button_blue_pressed.png" id="2_btn_blue_p"]
+[ext_resource type="Texture2D" uid="uid://bpuxqdtc4g15" path="res://scenes/ui/skin/button_red.png" id="3_btn_red"]
+[ext_resource type="Texture2D" uid="uid://b8gx31eyepfjs" path="res://scenes/ui/skin/button_red_pressed.png" id="4_btn_red_p"]
+[ext_resource type="Texture2D" uid="uid://bqlkt1hi842vs" path="res://scenes/ui/skin/banner.png" id="5_banner"]
+[ext_resource type="Texture2D" uid="uid://cc70naiv2e84j" path="res://scenes/ui/skin/wood_table.png" id="6_wood"]
+[ext_resource type="Texture2D" uid="uid://b3lwdph2oe0iw" path="res://scenes/ui/skin/paper.png" id="7_paper"]
+[ext_resource type="Texture2D" uid="uid://brxohrtkycc7k" path="res://scenes/ui/skin/ribbon_big_blue.png" id="8_rib_blue"]
+[ext_resource type="Texture2D" uid="uid://bhpb6fxe7ogii" path="res://scenes/ui/skin/ribbon_big_yellow.png" id="9_rib_yellow"]
+[ext_resource type="Texture2D" uid="uid://cly2ce16312j8" path="res://scenes/ui/skin/ribbon_small_yellow.png" id="10_rib_s_yellow"]
+[ext_resource type="Texture2D" uid="uid://c7gab1836mh5l" path="res://scenes/ui/skin/ribbon_small_blue.png" id="11_rib_s_blue"]
+[ext_resource type="Texture2D" uid="uid://ds1d5amrud2pk" path="res://scenes/assets/Tiny Swords (Free Pack)/Tiny Swords (Free Pack)/UI Elements/UI Elements/Bars/BigBar_Fill.png" id="12_hp_fill"]
+
+[sub_resource type="StyleBoxTexture" id="BannerPanel"]
+content_margin_left = 60.0
+content_margin_top = 44.0
+content_margin_right = 52.0
+content_margin_bottom = 86.0
+texture = ExtResource("5_banner")
+texture_margin_left = 100.0
+texture_margin_top = 68.0
+texture_margin_right = 84.0
+texture_margin_bottom = 111.0
+
+[sub_resource type="StyleBoxTexture" id="Button_disabled"]
+content_margin_left = 20.0
+content_margin_top = 10.0
+content_margin_right = 20.0
+content_margin_bottom = 18.0
+texture = ExtResource("1_btn_blue")
+texture_margin_left = 16.0
+texture_margin_top = 16.0
+texture_margin_right = 16.0
+texture_margin_bottom = 22.0
+modulate_color = Color(0.5, 0.5, 0.55, 1)
+
+[sub_resource type="StyleBoxEmpty" id="Empty"]
+
+[sub_resource type="StyleBoxTexture" id="Button_hover"]
+content_margin_left = 20.0
+content_margin_top = 10.0
+content_margin_right = 20.0
+content_margin_bottom = 18.0
+texture = ExtResource("1_btn_blue")
+texture_margin_left = 16.0
+texture_margin_top = 16.0
+texture_margin_right = 16.0
+texture_margin_bottom = 22.0
+modulate_color = Color(1.15, 1.15, 1.15, 1)
+
+[sub_resource type="StyleBoxTexture" id="Button_pressed"]
+content_margin_left = 20.0
+content_margin_top = 14.0
+content_margin_right = 20.0
+content_margin_bottom = 14.0
+texture = ExtResource("2_btn_blue_p")
+texture_margin_left = 16.0
+texture_margin_top = 16.0
+texture_margin_right = 16.0
+texture_margin_bottom = 16.0
+
+[sub_resource type="StyleBoxTexture" id="Button_normal"]
+content_margin_left = 20.0
+content_margin_top = 10.0
+content_margin_right = 20.0
+content_margin_bottom = 18.0
+texture = ExtResource("1_btn_blue")
+texture_margin_left = 16.0
+texture_margin_top = 16.0
+texture_margin_right = 16.0
+texture_margin_bottom = 22.0
+
+[sub_resource type="StyleBoxTexture" id="GoldRibbon"]
+content_margin_left = 100.0
+content_margin_top = 14.0
+content_margin_right = 100.0
+content_margin_bottom = 24.0
+texture = ExtResource("9_rib_yellow")
+texture_margin_left = 98.0
+texture_margin_right = 97.0
+
+[sub_resource type="StyleBoxTexture" id="LevelRibbon"]
+content_margin_left = 56.0
+content_margin_top = 10.0
+content_margin_right = 56.0
+content_margin_bottom = 16.0
+texture = ExtResource("11_rib_s_blue")
+texture_margin_left = 62.0
+texture_margin_right = 62.0
+
+[sub_resource type="StyleBoxTexture" id="PaperPanel"]
+content_margin_left = 28.0
+content_margin_top = 24.0
+content_margin_right = 28.0
+content_margin_bottom = 28.0
+texture = ExtResource("7_paper")
+texture_margin_left = 52.0
+texture_margin_top = 44.0
+texture_margin_right = 52.0
+texture_margin_bottom = 45.0
+
+[sub_resource type="StyleBoxTexture" id="HPBar_fill"]
+texture = ExtResource("12_hp_fill")
+
+[sub_resource type="StyleBoxTexture" id="RedButton_hover"]
+content_margin_left = 20.0
+content_margin_top = 10.0
+content_margin_right = 20.0
+content_margin_bottom = 18.0
+texture = ExtResource("3_btn_red")
+texture_margin_left = 16.0
+texture_margin_top = 16.0
+texture_margin_right = 16.0
+texture_margin_bottom = 22.0
+modulate_color = Color(1.15, 1.15, 1.15, 1)
+
+[sub_resource type="StyleBoxTexture" id="RedButton_pressed"]
+content_margin_left = 20.0
+content_margin_top = 14.0
+content_margin_right = 20.0
+content_margin_bottom = 14.0
+texture = ExtResource("4_btn_red_p")
+texture_margin_left = 16.0
+texture_margin_top = 16.0
+texture_margin_right = 16.0
+texture_margin_bottom = 16.0
+
+[sub_resource type="StyleBoxTexture" id="RedButton_normal"]
+content_margin_left = 20.0
+content_margin_top = 10.0
+content_margin_right = 20.0
+content_margin_bottom = 18.0
+texture = ExtResource("3_btn_red")
+texture_margin_left = 16.0
+texture_margin_top = 16.0
+texture_margin_right = 16.0
+texture_margin_bottom = 22.0
+
+[sub_resource type="StyleBoxTexture" id="TimerRibbon"]
+content_margin_left = 60.0
+content_margin_top = 8.0
+content_margin_right = 60.0
+content_margin_bottom = 14.0
+texture = ExtResource("10_rib_s_yellow")
+texture_margin_left = 62.0
+texture_margin_right = 62.0
+
+[sub_resource type="StyleBoxTexture" id="TitleRibbon"]
+content_margin_left = 100.0
+content_margin_top = 8.0
+content_margin_right = 100.0
+content_margin_bottom = 18.0
+texture = ExtResource("8_rib_blue")
+texture_margin_left = 98.0
+texture_margin_right = 97.0
+
+[sub_resource type="StyleBoxTexture" id="WoodPanel"]
+content_margin_left = 44.0
+content_margin_top = 40.0
+content_margin_right = 44.0
+content_margin_bottom = 56.0
+texture = ExtResource("6_wood")
+texture_margin_left = 84.0
+texture_margin_top = 85.0
+texture_margin_right = 84.0
+texture_margin_bottom = 103.0
+
+[sub_resource type="StyleBoxFlat" id="XPBar_fill"]
+bg_color = Color(0.3, 0.75, 1, 1)
+border_width_top = 2
+border_color = Color(0.75, 0.95, 1, 1)
+
+[resource]
+default_font_size = 22
+BannerPanel/base_type = &"PanelContainer"
+BannerPanel/styles/panel = SubResource("BannerPanel")
+Button/colors/font_color = Color(1, 1, 1, 1)
+Button/colors/font_disabled_color = Color(0.75, 0.75, 0.75, 1)
+Button/colors/font_focus_color = Color(1, 1, 1, 1)
+Button/colors/font_hover_color = Color(1, 1, 0.85, 1)
+Button/colors/font_hover_pressed_color = Color(1, 1, 0.85, 1)
+Button/colors/font_outline_color = Color(0.086, 0.11, 0.18, 1)
+Button/colors/font_pressed_color = Color(1, 1, 0.85, 1)
+Button/constants/h_separation = 14
+Button/constants/icon_max_width = 44
+Button/constants/outline_size = 6
+Button/styles/disabled = SubResource("Button_disabled")
+Button/styles/focus = SubResource("Empty")
+Button/styles/hover = SubResource("Button_hover")
+Button/styles/hover_pressed = SubResource("Button_pressed")
+Button/styles/normal = SubResource("Button_normal")
+Button/styles/pressed = SubResource("Button_pressed")
+DarkLabel/base_type = &"Label"
+DarkLabel/colors/font_color = Color(0.25, 0.17, 0.12, 1)
+DarkLabel/constants/outline_size = 0
+GoldRibbon/base_type = &"Label"
+GoldRibbon/constants/outline_size = 8
+GoldRibbon/font_sizes/font_size = 40
+GoldRibbon/styles/normal = SubResource("GoldRibbon")
+HeadingLabel/base_type = &"Label"
+HeadingLabel/constants/outline_size = 8
+HeadingLabel/font_sizes/font_size = 34
+Label/colors/font_color = Color(1, 1, 1, 1)
+Label/colors/font_outline_color = Color(0.086, 0.11, 0.18, 1)
+Label/constants/outline_size = 6
+LevelRibbon/base_type = &"Label"
+LevelRibbon/font_sizes/font_size = 20
+LevelRibbon/styles/normal = SubResource("LevelRibbon")
+PaperPanel/base_type = &"PanelContainer"
+PaperPanel/styles/panel = SubResource("PaperPanel")
+ProgressBar/styles/background = SubResource("Empty")
+ProgressBar/styles/fill = SubResource("HPBar_fill")
+RedButton/base_type = &"Button"
+RedButton/styles/hover = SubResource("RedButton_hover")
+RedButton/styles/hover_pressed = SubResource("RedButton_pressed")
+RedButton/styles/normal = SubResource("RedButton_normal")
+RedButton/styles/pressed = SubResource("RedButton_pressed")
+TimerRibbon/base_type = &"Label"
+TimerRibbon/font_sizes/font_size = 26
+TimerRibbon/styles/normal = SubResource("TimerRibbon")
+TitleRibbon/base_type = &"Label"
+TitleRibbon/constants/outline_size = 10
+TitleRibbon/font_sizes/font_size = 60
+TitleRibbon/styles/normal = SubResource("TitleRibbon")
+WoodPanel/base_type = &"PanelContainer"
+WoodPanel/styles/panel = SubResource("WoodPanel")
+XPBar/base_type = &"ProgressBar"
+XPBar/styles/fill = SubResource("XPBar_fill")
