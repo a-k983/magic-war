@@ -9,7 +9,10 @@ extends Node
 #     other off, plus a short per-sound cooldown so 30 coins picked up in
 #     one frame don't turn into a wall of noise.
 #   - Music and SFX each have their own bus, so the Settings sliders can
-#     set their volumes separately.
+#     set their volumes separately. The buses are defined in
+#     res://default_bus_layout.tres: creating them at runtime breaks the Web
+#     export (its audio graph ends up with no path to the speakers = silence).
+#     make_bus() is only a fallback if that file goes missing.
 #   - Every button in the game clicks automatically (see _on_node_added).
 
 const SFX_DIR := "res://audio/sfx/"
