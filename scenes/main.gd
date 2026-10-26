@@ -3,11 +3,12 @@ extends Node2D
 # triggers win/lose screens.
 
 const ENEMY_SCENE: PackedScene = preload("res://scenes/enemies/enemy.tscn")
+const BALANCE: Balance = preload("res://config/balance.tres")
 
 const ENEMY_PACK_DIR: String = "res://scenes/assets/Tiny Swords (Enemy Pack)/Tiny Swords (Enemy Pack)/Enemy Pack/"
 # Spawn order: one wave per entry, a new wave every `wave_interval`
 # seconds. Small fry first, building up to the bear as the 9:00 finale.
-# A 10-minute run reaches the first 7; the rest are there if the run is
+# A 5-minute run reaches the first 4; the rest are there if the run is
 # made longer (after the last entry, the last type keeps coming).
 # [folder, run sheet suffix, attack sheet suffix]. Index 0 is the skeleton,
 # which uses the frames already baked into enemy.tscn.
@@ -48,13 +49,12 @@ const ENDLESS_ORDER: Array[int] = [
 ]
 
 @export var spawn_distance: float = 800.0
-@export var run_duration: float = 600.0     # 10 minutes to win
 @export var elite_interval: float = 60.0    # An elite every minute
 @export var wave_interval: float = 90.0     # New enemy type every 1:30
 # Each new wave is tougher than the last. Wave 0 = x1.0, wave 1 = x1.15 enemy
 # HP and x1.25 damage to the player, wave 6 (the bear) = x1.9 HP and x2.5 damage.
 @export var wave_health_bonus: float = 0.15
-@export var wave_damage_bonus: float = 0.25
+# Per-wave damage bonus is in res://config/balance.tres (wave_damage_bonus).
 @export var endless_wave_interval: float = 60.0  # Endless: new type every minute
 
 var endless: bool = false                   # Copied from GameData at start
@@ -65,6 +65,7 @@ var run_over: bool = false
 var wave: int = 0                           # How many waves have started (0 = first)
 var enemy_type: int = 0                     # Index into ENEMY_TYPES
 var frames_cache: Dictionary = {}           # enemy_type -> SpriteFrames
+var kills: int = 0                          # Enemies killed this run (HUD, top right)
 
 func _ready() -> void:
 	endless = GameData.endless
@@ -102,7 +103,7 @@ func _process(delta: float) -> void:
 	elapsed += delta
 	
 	# Survived the full run: victory. (Endless has no finish line.)
-	if not endless and elapsed >= run_duration:
+	if not endless and elapsed >= BALANCE.win_time_minutes * 60.0:
 		run_over = true
 		GameData.save_game()
 		Audio.stop_music()
@@ -130,7 +131,7 @@ func _process(delta: float) -> void:
 			enemy_type = mini(wave, ENEMY_TYPES.size() - 1)
 		# Every hit the player takes gets stronger with each new enemy type —
 		# including from enemies already on the field.
-		player.wave_damage_bonus = wave * wave_damage_bonus
+		player.wave_damage_bonus = wave * BALANCE.wave_damage_bonus
 	if endless:
 		$HUD/TimerLabel.text += "  ·  Wave %d" % (wave + 1)
 
@@ -181,6 +182,10 @@ static func format_time(seconds: float) -> String:
 
 func _on_run_coins_changed(amount: int) -> void:
 	$HUD/GoldCounter/GoldLabel.text = str(amount)
+
+func _on_enemy_killed() -> void:
+	kills += 1
+	$HUD/GoldCounter/KillLabel.text = str(kills)
 
 func run_stats() -> Dictionary:
 	# Everything the game-over recap shows.
@@ -256,6 +261,7 @@ func spawn_enemy() -> void:
 	# add_child works because _ready (health = max_health) runs on add.
 	enemy.max_health += int(elapsed / 60.0) * 2
 	apply_wave_scaling(enemy)
+	enemy.killed.connect(_on_enemy_killed)
 
 	add_child(enemy)
 
@@ -266,12 +272,14 @@ func spawn_elite() -> void:
 	var elite: CharacterBody2D = ENEMY_SCENE.instantiate()
 	elite.custom_frames = get_enemy_frames()
 	elite.global_position = spawn_point()
-	elite.coin_drop = 15
-	elite.max_health = 60 + int(elapsed / 60.0) * 20
-	elite.move_speed = 125.0        # Slower, scarier
-	elite.contact_damage = 3
+	elite.coin_drop = BALANCE.coins_per_elite
+	# Base elite stats come from res://config/balance.tres.
+	elite.max_health = BALANCE.elite_health + int(elapsed / 60.0) * 20
+	elite.move_speed = BALANCE.elite_speed   # Slower, scarier
+	elite.contact_damage = BALANCE.elite_damage
 	elite.xp_drop = 10              # Kill reward: a shower of orbs
 	elite.scale = Vector2(2.5, 2.5) # Physically huge
 	apply_wave_scaling(elite)
+	elite.killed.connect(_on_enemy_killed)
 
 	add_child(elite)

@@ -12,7 +12,8 @@
 [ext_resource type="Texture2D" uid="uid://hrov7if1f2hx" path="res://scenes/assets/Tiny Swords (Free Pack)/Tiny Swords (Free Pack)/UI Elements/UI Elements/Icons/Icon_08.png" id="10_back"]
 [ext_resource type="PackedScene" path="res://scenes/world/world.tscn" id="11_world"]
 [ext_resource type="Texture2D" uid="uid://cqadw8i58a8ce" path="res://scenes/assets/Tiny Swords (Free Pack)/Tiny Swords (Free Pack)/UI Elements/UI Elements/Icons/Icon_03.png" id="12_coin"]
-[ext_resource type="Script" path="res://scenes/ui/virtual_joystick.gd" id="13_joystick"]
+[ext_resource type="Script" uid="uid://dj0hkuvm7rw6l" path="res://scenes/ui/virtual_joystick.gd" id="13_joystick"]
+[ext_resource type="Texture2D" uid="uid://bymdnmpc81trm" path="res://scenes/assets/Items Pack/items/skull.png" id="14_skull"]
 
 [node name="Main" type="Node2D" unique_id=1542773792]
 y_sort_enabled = true
@@ -27,7 +28,8 @@ autostart = true
 
 [node name="HUD" type="CanvasLayer" parent="." unique_id=1805399840]
 
-[node name="Joystick" type="Control" parent="HUD"]
+[node name="Joystick" type="Control" parent="HUD" unique_id=1271448461]
+layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -36,7 +38,7 @@ grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("13_joystick")
 
-[node name="PauseButton" type="Button" parent="HUD"]
+[node name="PauseButton" type="Button" parent="HUD" unique_id=1630582623]
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
@@ -134,12 +136,29 @@ horizontal_alignment = 1
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -216.0
+offset_left = -420.0
 offset_top = 30.0
 offset_right = -20.0
 offset_bottom = 78.0
 grow_horizontal = 0
 alignment = 2
+
+[node name="KillIcon" type="TextureRect" parent="HUD/GoldCounter" unique_id=1456130516]
+texture_filter = 1
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+texture = ExtResource("14_skull")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="KillLabel" type="Label" parent="HUD/GoldCounter" unique_id=2011735188]
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "0"
+
+[node name="KillSpacer" type="Control" parent="HUD/GoldCounter" unique_id=65155437]
+custom_minimum_size = Vector2(18, 0)
+layout_mode = 2
 
 [node name="CoinIcon" type="TextureRect" parent="HUD/GoldCounter" unique_id=322729594]
 custom_minimum_size = Vector2(44, 44)

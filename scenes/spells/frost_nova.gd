@@ -4,9 +4,10 @@ extends Node2D
 
 const FX = preload("res://scenes/spells/spell_fx.gd")
 const FROST_RING = preload("res://scenes/spells/frost_ring.gd")
+const BALANCE: Balance = preload("res://config/balance.tres")
 
 @export var cooldown: float = 3.0
-@export var damage: int = 1
+var damage: int = BALANCE.frost_damage  # Tune in res://config/balance.tres
 @export var radius: float = 250.0
 @export var slow_factor: float = 0.5     # Enemies drop to 50% speed
 @export var slow_duration: float = 2.0
