@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="Balance" format=3 uid="uid://dxqegn051dxd7"]
+
+[ext_resource type="Script" uid="uid://c8dbn5kivy8ua" path="res://config/balance.gd" id="1_balance"]
+
+[resource]
+script = ExtResource("1_balance")
+fireball_damage = 20
+frost_damage = 2
+orbit_damage = 2
+enemy_health = 3

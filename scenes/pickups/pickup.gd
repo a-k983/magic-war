@@ -3,6 +3,7 @@ extends Area2D
 #   health - red potion, heals the player
 #   magnet - pulls every XP orb and coin on the map to the player
 #   nuke   - skull, kills every enemy on screen
+#   invincible - golden flame, Super Mode: a few seconds of invincibility
 
 # kind -> [texture, on-screen height in pixels]
 const ICONS: Dictionary = {
@@ -10,9 +11,10 @@ const ICONS: Dictionary = {
 	"magnet": [preload("res://scenes/pickups/magnet.svg"), 56.0],
 	# 16x16 pixel art: 64 = exactly 4x, so every pixel stays the same size.
 	"nuke": [preload("res://scenes/assets/Items Pack/items/skull.png"), 64.0],
+	"invincible": [preload("res://scenes/pickups/super_mode.svg"), 60.0],
 }
 
-const SOUNDS: Dictionary = {"health": "heal", "magnet": "magnet", "nuke": "nuke"}
+const SOUNDS: Dictionary = {"health": "heal", "magnet": "magnet", "nuke": "nuke", "invincible": "level_up"}
 
 @export var kind: String = "health"
 @export var heal_amount: int = 3
@@ -27,7 +29,7 @@ func _ready() -> void:
 	body_entered.connect(_on_body_entered)
 
 func _on_body_entered(body: Node2D) -> void:
-	# Enemies also touch us — only the player may collect.
+	# Only the player may collect (our mask only sees the player's layer anyway).
 	if not body.is_in_group("player"):
 		return
 	Audio.play(SOUNDS[kind], -2.0, 0.0)
@@ -39,6 +41,8 @@ func _on_body_entered(body: Node2D) -> void:
 				orb.attracted = true
 		"nuke":
 			nuke()
+		"invincible":
+			body.go_super()
 	queue_free()
 
 func nuke() -> void:

@@ -3,8 +3,9 @@ extends Area2D
 # it sweeps through. A pulsing arcane sphere that leaves a violet trail.
 
 const FX = preload("res://scenes/spells/spell_fx.gd")
+const BALANCE: Balance = preload("res://config/balance.tres")
 
-@export var damage: int = 1
+var damage: int = BALANCE.orbit_damage  # Tune in res://config/balance.tres
 
 var age: float = 0.0
 

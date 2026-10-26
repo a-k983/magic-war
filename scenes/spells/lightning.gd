@@ -2,9 +2,10 @@ extends Node2D
 # Lightning Arc: periodically zaps a random enemy in range. Instant hit.
 
 const FX = preload("res://scenes/spells/spell_fx.gd")
+const BALANCE: Balance = preload("res://config/balance.tres")
 
 @export var cooldown: float = 1.5
-@export var damage: int = 2
+var damage: int = BALANCE.lightning_damage  # Tune in res://config/balance.tres
 @export var strike_range: float = 400.0
 
 var timer: float = 0.0

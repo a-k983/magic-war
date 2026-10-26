@@ -5,6 +5,7 @@ extends Area2D
 # halo, and a gentle bob — drawn in code like the spell visuals.
 
 const FX = preload("res://scenes/spells/spell_fx.gd")
+const BALANCE: Balance = preload("res://config/balance.tres")
 
 @export var xp_value: int = 1
 @export var magnet_range: float = 150.0   # Start flying when player is this close
@@ -19,6 +20,8 @@ var age: float = 0.0
 var glow: Sprite2D = null
 
 func _ready() -> void:
+	# Reach shop upgrade: fly in from farther away.
+	magnet_range *= 1.0 + BALANCE.pickup_range_per_level * GameData.meta_upgrades["pickup_range"]
 	add_to_group("xp_orbs")
 	player = get_tree().get_first_node_in_group("player")
 	body_entered.connect(_on_body_entered)

@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+  <!-- Super Mode pickup: a spiky golden flame with a lightning bolt -->
+  <g stroke="#1f2a3c" stroke-width="4" stroke-linejoin="round">
+    <!-- spiky flame -->
+    <path d="M32 3l6 13 9-8-1 14 13-3-7 12 8 6-10 4c2 10-5 19-18 19S12 51 14 41L4 37l8-6-7-12 13 3-1-14 9 8z" fill="#ffc21a"/>
+  </g>
+  <!-- bright inner flame -->
+  <path d="M32 15l4 9 6-4-1 9 7-1-4 7 4 4c0 8-6 14-16 14s-16-6-16-14l4-4-4-7 7 1-1-9 6 4z" fill="#fff07a"/>
+  <!-- lightning bolt -->
+  <path d="M35 22l-10 16h7l-4 13 11-18h-7z" fill="#ffffff" stroke="#1f2a3c" stroke-width="3" stroke-linejoin="round"/>
+</svg>

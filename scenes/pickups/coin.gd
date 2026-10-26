@@ -2,6 +2,8 @@ extends Area2D
 # Coin: dropped by dead enemies. Pops out of the body, then works like an
 # XP orb — flies to the player when they get close, adds gold on contact.
 
+const BALANCE: Balance = preload("res://config/balance.tres")
+
 @export var value: int = 1
 @export var magnet_range: float = 150.0   # Start flying when player is this close
 @export var magnet_speed: float = 400.0
@@ -15,6 +17,8 @@ var age: float = 0.0
 
 func _ready() -> void:
 	add_to_group("coins")
+	# Reach shop upgrade: fly in from farther away.
+	magnet_range *= 1.0 + BALANCE.pickup_range_per_level * GameData.meta_upgrades["pickup_range"]
 	player = get_tree().get_first_node_in_group("player")
 	body_entered.connect(_on_body_entered)
 
@@ -45,7 +49,7 @@ func _physics_process(delta: float) -> void:
 		)
 
 func _on_body_entered(body: Node2D) -> void:
-	# Enemies also touch us — only the player may collect.
+	# Only the player may collect (our mask only sees the player's layer anyway).
 	if body.is_in_group("player"):
 		GameData.add_coins(value)
 		Audio.play("coin", -9.0, 0.04)

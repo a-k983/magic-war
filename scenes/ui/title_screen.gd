@@ -17,7 +17,7 @@ func _ready() -> void:
 	%SettingsButton.pressed.connect(WindowControls.open_settings)
 
 func _on_play_pressed(endless: bool) -> void:
-	# main.tscn reads this to decide: 10-minute run or endless.
+	# main.tscn reads this to decide: 5-minute run or endless.
 	GameData.endless = endless
 	get_tree().change_scene_to_file("res://scenes/main.tscn")
 

@@ -6,7 +6,10 @@ signal leveled_up(new_level: int)
 signal health_changed(current_hp: int, max_hp: int)
 signal died
 
-@export var move_speed: float = 250.0
+# Tuning lives in res://config/balance.tres (speed, damage, streaks...).
+const BALANCE: Balance = preload("res://config/balance.tres")
+
+var move_speed: float  # From BALANCE.player_speed; upgrades multiply it
 
 # ---------- MOVEMENT ----------
 
@@ -46,32 +49,53 @@ func update_animation(direction: Vector2) -> void:
 @export var max_health: int = 10
 # No i-frames: every enemy's hit lands, so a swarm hurts far more than one
 # enemy. Each enemy has its own attack cooldown (see enemy.gd) instead.
-@export var damage_taken_multiplier: float = 1.5
+# Damage multiplier and swarm-streak settings come from BALANCE.
+var damage_taken_multiplier: float
 # Extra damage taken from the current wave; Main raises it each time a new
-# enemy type starts spawning (0.25 per wave by default).
+# enemy type starts spawning (BALANCE.wave_damage_bonus per wave).
 var wave_damage_bonus: float = 0.0
-# Hits landing within this many seconds of the previous one build a streak;
-# each streak step adds `streak_bonus` to the damage, up to `max_streak` steps.
-@export var streak_window: float = 0.75
-@export var streak_bonus: float = 0.25
-@export var max_streak: int = 8
+# Hits landing within streak_window seconds of the previous one build a
+# streak; each step adds streak_bonus to the damage, up to max_streak steps.
+var streak_window: float
+var streak_bonus: float
+var max_streak: int
 
 var health: int
 var hit_streak: int = 0
 var time_since_hit: float = INF
 var pending_damage: float = 0.0  # Fractional damage carried to the next hit
 var flash_timer: float = 0.0
+var regen_rate: float = 0.0      # HP/sec from the Regeneration shop upgrade
+var pending_regen: float = 0.0   # Fractional HP carried until a whole 1 heals
+var dodge_chance: float = 0.0    # From the Dodge shop upgrade (0.3 = 30%)
 
 func _ready() -> void:
+	move_speed = BALANCE.player_speed
+	fireball_damage = BALANCE.fireball_damage
+	damage_taken_multiplier = BALANCE.damage_taken_multiplier
+	streak_window = BALANCE.streak_window
+	streak_bonus = BALANCE.streak_bonus
+	max_streak = BALANCE.max_streak
 	# Apply permanent meta upgrades purchased in the shop.
 	max_health += 2 * GameData.meta_upgrades["max_hp"]
 	fireball_damage += GameData.meta_upgrades["damage"]
 	move_speed *= 1.0 + 0.05 * GameData.meta_upgrades["move_speed"]
+	regen_rate = BALANCE.regen_per_level * GameData.meta_upgrades["regen"]
+	fire_cooldown *= 1.0 - BALANCE.fire_rate_per_level * GameData.meta_upgrades["fire_rate"]
+	dodge_chance = BALANCE.dodge_per_level * GameData.meta_upgrades["dodge"]
 	health = max_health
 
 func take_damage(amount: int) -> void:
 	if health <= 0:
 		return  # Already dead; several enemies can hit on the same frame
+	if super_timer > 0.0:
+		return  # Super Mode: invincible
+	if randf() < dodge_chance:
+		# Dodged: a quick see-through flash instead of the red one. Doesn't
+		# touch the swarm streak.
+		anim.modulate = Color(0.7, 0.9, 1.0, 0.5)
+		flash_timer = 0.12
+		return
 
 	# Swarm streak: rapid back-to-back hits hurt more and more.
 	if time_since_hit <= streak_window:
@@ -115,7 +139,7 @@ func die() -> void:
 const FIREBALL_SCENE: PackedScene = preload("res://scenes/spells/fireball.tscn")
 
 @export var fire_cooldown: float = 0.8
-@export var fireball_damage: int = 1
+var fireball_damage: int  # From BALANCE.fireball_damage; upgrades add to it
 @export var fireball_speed: float = 500.0
 
 var fire_timer: float = 0.0
@@ -126,6 +150,13 @@ func _process(delta: float) -> void:
 		flash_timer -= delta
 		if flash_timer <= 0.0:
 			anim.modulate = Color.WHITE
+	if super_timer > 0.0:
+		update_super(delta)
+	if regen_rate > 0.0 and health < max_health:
+		pending_regen += regen_rate * delta
+		if pending_regen >= 1.0:
+			heal(int(pending_regen))
+			pending_regen -= int(pending_regen)
 
 	fire_timer -= delta
 	if fire_timer <= 0.0:
@@ -152,6 +183,71 @@ func fire_at(target: Node2D) -> void:
 	fireball.speed = fireball_speed
 	get_parent().add_child(fireball)
 	Audio.play("fireball_cast", -10.0, 0.1)
+
+# ---------- SUPER MODE (invincibility pickup) ----------
+
+const SUPER_AURA: Texture2D = preload("res://scenes/player/super_aura.svg")
+const SUPER_TINT := Color(1.6, 1.35, 0.45)  # Golden glow (>1 = brighter than normal)
+const SUPER_WARNING: float = 1.5            # Aura flickers this long before it ends
+
+var super_timer: float = 0.0  # Seconds of invincibility left
+var super_aura: Sprite2D
+var super_sparks: CPUParticles2D
+
+func go_super() -> void:
+	# A second pickup refreshes the timer rather than stacking.
+	super_timer = BALANCE.invincible_duration
+	if super_aura == null:
+		build_super_effects()
+	super_aura.visible = true
+	super_sparks.emitting = true
+	flash_timer = 0.0  # So a pending hurt-flash doesn't wipe the gold tint
+	anim.modulate = SUPER_TINT
+
+func build_super_effects() -> void:
+	# Spiky golden flames behind the sprite, added (light) blending so they glow.
+	super_aura = Sprite2D.new()
+	super_aura.texture = SUPER_AURA
+	super_aura.position = Vector2(0, -14)
+	var glow := CanvasItemMaterial.new()
+	glow.blend_mode = CanvasItemMaterial.BLEND_MODE_ADD
+	super_aura.material = glow
+	add_child(super_aura)
+	move_child(super_aura, anim.get_index())  # Draw before (behind) the sprite
+	# Golden sparks streaming upward.
+	super_sparks = CPUParticles2D.new()
+	super_sparks.amount = 28
+	super_sparks.lifetime = 0.55
+	super_sparks.emission_shape = CPUParticles2D.EMISSION_SHAPE_SPHERE
+	super_sparks.emission_sphere_radius = 34.0
+	super_sparks.direction = Vector2.UP
+	super_sparks.spread = 15.0
+	super_sparks.gravity = Vector2(0, -260)
+	super_sparks.initial_velocity_min = 40.0
+	super_sparks.initial_velocity_max = 120.0
+	super_sparks.scale_amount_min = 2.5
+	super_sparks.scale_amount_max = 5.0
+	var fade := Gradient.new()
+	fade.set_color(0, Color(1.0, 0.98, 0.7))
+	fade.set_color(1, Color(1.0, 0.75, 0.1, 0.0))
+	super_sparks.color_ramp = fade
+	super_sparks.material = glow
+	super_sparks.emitting = false
+	add_child(super_sparks)
+
+func update_super(delta: float) -> void:
+	super_timer -= delta
+	if super_timer <= 0.0:
+		super_aura.visible = false
+		super_sparks.emitting = false
+		anim.modulate = Color.WHITE
+		return
+	# Flames flicker and pulse; near the end they blink as a warning.
+	var t: float = Time.get_ticks_msec() / 1000.0
+	super_aura.scale = Vector2(1.0 + 0.06 * sin(t * 23.0), 1.0 + 0.1 * sin(t * 17.0))
+	super_aura.modulate.a = 0.85 + 0.15 * sin(t * 31.0)
+	if super_timer < SUPER_WARNING:
+		super_aura.visible = int(super_timer * 10.0) % 2 == 0
 
 # ---------- XP & LEVELING ----------
 
