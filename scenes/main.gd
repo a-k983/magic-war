@@ -4,6 +4,8 @@ extends Node2D
 
 const ENEMY_SCENE: PackedScene = preload("res://scenes/enemies/enemy.tscn")
 const BALANCE: Balance = preload("res://config/balance.tres")
+const REVIVE_OFFER = preload("res://scenes/ui/revive_offer.gd")
+const BOOST_OFFER = preload("res://scenes/ui/boost_offer.gd")
 
 @export var spawn_distance: float = 800.0
 @export var elite_interval: float = 60.0    # An elite every minute
@@ -26,6 +28,8 @@ var enemy_type: Dictionary = {}             # The type spawning now
 var wave_interval: float = 60.0             # Seconds per enemy type, set in _ready
 var frames_cache: Dictionary = {}           # Enemy type name -> SpriteFrames
 var kills: int = 0                          # Enemies killed this run (HUD, top right)
+var revives_left: int = BALANCE.revives_per_run
+var revive_offer: CanvasLayer
 
 func _ready() -> void:
 	endless = GameData.endless
@@ -34,6 +38,11 @@ func _ready() -> void:
 	wave_interval = endless_wave_interval if endless \
 		else BALANCE.win_time_minutes * 60.0 / enemy_order.size()
 	$Ground.modulate = map["ground"]
+	revive_offer = REVIVE_OFFER.new()
+	revive_offer.accepted.connect(_on_revive_accepted)
+	revive_offer.declined.connect(finish_run)
+	add_child(revive_offer)
+	$HUD.add_child(BOOST_OFFER.new())
 	WindowControls.layout_changed.connect(fit_hud)
 	fit_hud()
 	show_map_banner()
@@ -150,6 +159,25 @@ func win_level() -> void:
 		$GameOverScreen.open("VICTORY!\nYou ended the Magic War.", stats)
 
 func _on_player_died() -> void:
+	if revives_left > 0 and Ads.is_available():
+		get_tree().paused = true
+		revive_offer.visible = true
+	else:
+		finish_run()
+
+func _on_revive_accepted() -> void:
+	Ads.show_rewarded(_on_revive_ad_finished)
+
+func _on_revive_ad_finished(rewarded: bool) -> void:
+	if rewarded:
+		revives_left -= 1
+		get_tree().paused = false
+		player.revive()
+	else:
+		revive_offer.visible = true  # Skipped: the choice stands
+
+func finish_run() -> void:
+	get_tree().paused = false
 	run_over = true
 	var stats: Dictionary = run_stats()
 	if endless:

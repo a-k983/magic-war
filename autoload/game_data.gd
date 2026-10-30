@@ -4,6 +4,7 @@ extends Node
 # accessible from anywhere as `GameData`. Think of it as a global module.
 
 const SAVE_PATH: String = "user://savegame.json"
+const BALANCE: Balance = preload("res://config/balance.tres")
 # "user://" = a per-user writable folder Godot manages for you.
 # On Windows it's under %APPDATA%\Godot\. Never save to res:// —
 # that's read-only once the game is exported.
@@ -18,6 +19,7 @@ var endless_best: float = 0.0   # Longest endless survival, in seconds (saved)
 var level_index: int = 0        # Map of the run being started (index into Levels.MAPS)
 var levels_unlocked: int = 1    # How many maps can be played; a win adds the next (saved)
 var character: String = "monk"  # Id from Characters.ROSTER (saved)
+var active_boost: String = ""   # Ad boost running now: "gold", "xp", "drops" or ""
 
 # Meta upgrade levels the player has purchased. Keys must match
 # the shop and player code.
@@ -49,7 +51,11 @@ func _ready() -> void:
 func start_run() -> void:
 	run_coins = 0
 	pending_coins = 0.0
+	active_boost = ""
 	run_coins_changed.emit(run_coins)
+
+func boost_factor(id: String) -> float:
+	return BALANCE.boost_multiplier if active_boost == id else 1.0
 
 func is_level_unlocked(index: int) -> bool:
 	return index < levels_unlocked
@@ -64,7 +70,7 @@ func add_coins(amount: int) -> void:
 	# credit until the total reaches the next whole number (at +25%: 2, 1, 1,
 	# 1, then repeat = 5 gold per 4 coins). The bonus shows on the first coin,
 	# and the total still comes out exact.
-	pending_coins += amount * (1.0 + 0.25 * meta_upgrades["coin_gain"])
+	pending_coins += amount * (1.0 + 0.25 * meta_upgrades["coin_gain"]) * boost_factor("gold")
 	var gained: int = maxi(ceili(pending_coins - 0.0001), 0)  # 0.0001: float slop
 	pending_coins -= gained
 	coins += gained

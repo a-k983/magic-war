@@ -133,6 +133,18 @@ func take_damage(amount: int) -> void:
 	if health <= 0:
 		die()
 
+func revive() -> void:
+	# Back on our feet where we fell, with a moment to escape the swarm.
+	health = max_health
+	hit_streak = 0
+	pending_damage = 0.0
+	slow_timer = 0.0
+	health_changed.emit(health, max_health)
+	visible = true
+	set_physics_process(true)
+	set_process(true)
+	go_super(BALANCE.revive_invincible_seconds)
+
 func apply_slow(factor: float, duration: float) -> void:
 	slow_factor = factor
 	slow_timer = duration
@@ -229,9 +241,9 @@ var super_timer: float = 0.0  # Seconds of invincibility left
 var super_aura: Sprite2D
 var super_sparks: CPUParticles2D
 
-func go_super() -> void:
+func go_super(seconds: float = BALANCE.invincible_duration) -> void:
 	# A second pickup refreshes the timer rather than stacking.
-	super_timer = BALANCE.invincible_duration
+	super_timer = seconds
 	if super_aura == null:
 		build_super_effects()
 	super_aura.visible = true
@@ -291,7 +303,7 @@ var level: int = 1
 var xp_to_next: int = 5
 
 func collect_xp(amount: int) -> void:
-	xp += amount
+	xp += roundi(amount * GameData.boost_factor("xp"))
 	while xp >= xp_to_next:
 		xp -= xp_to_next
 		level += 1

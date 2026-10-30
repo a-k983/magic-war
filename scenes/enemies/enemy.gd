@@ -502,18 +502,23 @@ func apply_slow(factor: float, duration: float) -> void:
 	speed_multiplier = 1.0
 	anim.modulate = Color.WHITE
 
+func drop_chances() -> Dictionary:
+	# Luck shop upgrades raise every enemy's chance for their pickup, and the
+	# Drops ad boost multiplies the lot.
+	var chances: Dictionary = pickup_chances.duplicate()
+	for kind in LUCK_UPGRADES:
+		var luck: Array = LUCK_UPGRADES[kind]
+		chances[kind] = (chances.get(kind, 0.0)
+			+ BALANCE.get(luck[1]) * GameData.meta_upgrades[luck[0]]) * GameData.boost_factor("drops")
+	return chances
+
 func die(drop_pickup: bool = true) -> void:
 	if is_queued_for_deletion():
 		return  # Already dying (e.g. a fireball and a nuke on the same frame)
 	killed.emit()
 	Audio.play("enemy_die", -9.0, 0.15)
 	if drop_pickup:
-		# Luck shop upgrades raise every enemy's chance for their pickup.
-		var chances: Dictionary = pickup_chances.duplicate()
-		for kind in LUCK_UPGRADES:
-			var luck: Array = LUCK_UPGRADES[kind]
-			chances[kind] = chances.get(kind, 0.0) \
-				+ BALANCE.get(luck[1]) * GameData.meta_upgrades[luck[0]]
+		var chances: Dictionary = drop_chances()
 		# One roll decides which pickup (if any) drops.
 		var roll: float = randf()
 		for kind in chances:
