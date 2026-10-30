@@ -317,6 +317,14 @@ layout_mode = 2
 theme_override_constants/separation = 16
 alignment = 1
 
+[node name="NextButton" type="Button" parent="GameOverScreen/Panel/CenterContainer/Banner/VBoxContainer/Buttons" unique_id=1943767393]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(260, 72)
+layout_mode = 2
+text = "Next Level"
+icon = ExtResource("9_play")
+
 [node name="RestartButton" type="Button" parent="GameOverScreen/Panel/CenterContainer/Banner/VBoxContainer/Buttons" unique_id=1943767392]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(260, 72)

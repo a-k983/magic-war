@@ -1,5 +1,7 @@
 extends CharacterBody2D
 # The Player: moves, auto-fires, collects XP, levels up, can now DIE.
+# Which character this is (and so its sprites and starting weapon) comes from
+# GameData.character: see config/characters.gd.
 
 signal xp_changed(current_xp: int, xp_needed: int)
 signal leveled_up(new_level: int)
@@ -10,6 +12,9 @@ signal died
 const BALANCE: Balance = preload("res://config/balance.tres")
 
 var move_speed: float  # From BALANCE.player_speed; upgrades multiply it
+var character: Dictionary = Characters.by_id(GameData.character)
+var slow_factor: float = 1.0  # Below 1 while venom lasts (see apply_slow)
+var slow_timer: float = 0.0
 
 # ---------- MOVEMENT ----------
 
@@ -17,7 +22,7 @@ var joystick: Node = null
 @onready var anim: AnimatedSprite2D = $AnimatedSprite2D
 # @onready waits until the node tree is built before grabbing the node.
 
-func _physics_process(_delta: float) -> void:
+func _physics_process(delta: float) -> void:
 	var direction: Vector2 = Input.get_vector(
 		"move_left", "move_right", "move_up", "move_down"
 	)
@@ -28,7 +33,8 @@ func _physics_process(_delta: float) -> void:
 		if joystick != null:
 			direction = joystick.output
 
-	velocity = direction * move_speed
+	slow_timer -= delta
+	velocity = direction * move_speed * (slow_factor if slow_timer > 0.0 else 1.0)
 	move_and_slide()
 	update_animation(direction)
 
@@ -70,15 +76,20 @@ var pending_regen: float = 0.0   # Fractional HP carried until a whole 1 heals
 var dodge_chance: float = 0.0    # From the Dodge shop upgrade (0.3 = 30%)
 
 func _ready() -> void:
+	anim.sprite_frames = Characters.build_frames(character)
+	anim.play("idle")
 	move_speed = BALANCE.player_speed
-	fireball_damage = BALANCE.fireball_damage
+	weapon_damage = BALANCE.get(character["damage"])
+	fire_cooldown = character["cooldown"]
+	weapon_speed = character["speed"]
+	weapon_reach = character["reach"]
 	damage_taken_multiplier = BALANCE.damage_taken_multiplier
 	streak_window = BALANCE.streak_window
 	streak_bonus = BALANCE.streak_bonus
 	max_streak = BALANCE.max_streak
 	# Apply permanent meta upgrades purchased in the shop.
 	max_health += 2 * GameData.meta_upgrades["max_hp"]
-	fireball_damage += GameData.meta_upgrades["damage"]
+	weapon_damage += GameData.meta_upgrades["damage"]
 	move_speed *= 1.0 + 0.05 * GameData.meta_upgrades["move_speed"]
 	regen_rate = BALANCE.regen_per_level * GameData.meta_upgrades["regen"]
 	fire_cooldown *= 1.0 - BALANCE.fire_rate_per_level * GameData.meta_upgrades["fire_rate"]
@@ -122,6 +133,10 @@ func take_damage(amount: int) -> void:
 	if health <= 0:
 		die()
 
+func apply_slow(factor: float, duration: float) -> void:
+	slow_factor = factor
+	slow_timer = duration
+
 func heal(amount: int) -> void:
 	health = min(health + amount, max_health)
 	health_changed.emit(health, max_health)
@@ -137,10 +152,14 @@ func die() -> void:
 # ---------- AUTO-FIRE ----------
 
 const FIREBALL_SCENE: PackedScene = preload("res://scenes/spells/fireball.tscn")
+const ARROW = preload("res://scenes/spells/arrow.gd")
+const CLEAVE = preload("res://scenes/spells/cleave.gd")
+const THRUST = preload("res://scenes/spells/lance_thrust.gd")
 
-@export var fire_cooldown: float = 0.8
-var fireball_damage: int  # From BALANCE.fireball_damage; upgrades add to it
-@export var fireball_speed: float = 500.0
+var fire_cooldown: float  # From the character; upgrades shorten it
+var weapon_damage: int    # From the character's Balance entry; upgrades add to it
+var weapon_speed: float   # Projectile speed; upgrades raise it
+var weapon_reach: float   # Melee reach; 0 = a projectile, fires at any range
 
 var fire_timer: float = 0.0
 
@@ -161,7 +180,8 @@ func _process(delta: float) -> void:
 	fire_timer -= delta
 	if fire_timer <= 0.0:
 		var target: Node2D = find_nearest_enemy()
-		if target != null:
+		if target != null and (weapon_reach <= 0.0
+				or global_position.distance_to(target.global_position) <= weapon_reach):
 			fire_at(target)
 			fire_timer = fire_cooldown
 
@@ -176,13 +196,28 @@ func find_nearest_enemy() -> Node2D:
 	return nearest
 
 func fire_at(target: Node2D) -> void:
-	var fireball: Area2D = FIREBALL_SCENE.instantiate()
-	fireball.global_position = global_position
-	fireball.direction = (target.global_position - global_position).normalized()
-	fireball.damage = fireball_damage
-	fireball.speed = fireball_speed
-	get_parent().add_child(fireball)
-	Audio.play("fireball_cast", -10.0, 0.1)
+	var aim: Vector2 = (target.global_position - global_position).normalized()
+	var shot: Node2D
+	match character["weapon"]:
+		"fireball":
+			shot = FIREBALL_SCENE.instantiate()
+			shot.speed = weapon_speed
+			Audio.play("fireball_cast", -10.0, 0.1)
+		"arrow":
+			shot = ARROW.new()
+			shot.speed = weapon_speed
+			shot.texture = load(Characters.UNITS_DIR + character["colour"] + " Units/Archer/Arrow.png")
+			Audio.play("fireball_cast", -13.0, 0.2)
+		"cleave":
+			shot = CLEAVE.new()
+			shot.reach = weapon_reach
+		"thrust":
+			shot = THRUST.new()
+			shot.reach = weapon_reach
+	shot.global_position = global_position
+	shot.direction = aim
+	shot.damage = weapon_damage
+	get_parent().add_child(shot)
 
 # ---------- SUPER MODE (invincibility pickup) ----------
 
@@ -269,17 +304,42 @@ func collect_xp(amount: int) -> void:
 const LIGHTNING_SCENE: PackedScene = preload("res://scenes/spells/lightning.tscn")
 const FROST_SCENE: PackedScene = preload("res://scenes/spells/frost_nova.tscn")
 const ORBIT_SCENE: PackedScene = preload("res://scenes/spells/arcane_orbit.tscn")
+# Weapons that level up: id after "level_" -> script. Each has set_level().
+const LEVEL_WEAPONS: Dictionary = {
+	"runeward": preload("res://scenes/spells/runeward.gd"),
+	"starfall": preload("res://scenes/spells/starfall.gd"),
+	"moonreaver": preload("res://scenes/spells/moonreaver.gd"),
+	"thornwake": preload("res://scenes/spells/thornwake.gd"),
+}
+
+var weapon_nodes: Dictionary = {}   # Weapon id -> its node, once unlocked
+
+func weapon_level(id: String) -> int:
+	return weapon_nodes[id].level if weapon_nodes.has(id) else 0
+
+func level_up_weapon(id: String) -> void:
+	if not weapon_nodes.has(id):
+		weapon_nodes[id] = LEVEL_WEAPONS[id].new()
+		add_child(weapon_nodes[id])
+		weapon_nodes[id].set_level(1)
+	else:
+		weapon_nodes[id].set_level(weapon_nodes[id].level + 1)
 
 func apply_upgrade(id: String) -> void:
+	if id.begins_with("level_"):
+		level_up_weapon(id.trim_prefix("level_"))
+		return
 	match id:
 		"damage":
-			fireball_damage += 1
+			weapon_damage += 1
 		"fire_rate":
 			fire_cooldown *= 0.75
 		"move_speed":
 			move_speed *= 1.15
 		"projectile_speed":
-			fireball_speed *= 1.3
+			weapon_speed *= 1.3
+		"reach":
+			weapon_reach *= 1.15
 		"unlock_lightning":
 			add_child(LIGHTNING_SCENE.instantiate())
 		"unlock_frost":

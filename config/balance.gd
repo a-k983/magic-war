@@ -7,9 +7,21 @@ extends Resource
 # Hover a value in the Inspector to see what it does.
 
 @export_group("Win Condition")
-## Minutes the player must survive to win a normal run. Endless mode ignores it.
-## A new enemy type arrives every 1:30, so shorter runs see fewer types.
+## Minutes the player must survive to win a map (and unlock the next one).
+## Endless mode ignores it. The map's five enemy types are spread evenly across
+## this time, so every map shows all five however long the run is.
 @export_range(0.5, 30.0, 0.5) var win_time_minutes: float = 5.0
+
+@export_group("Difficulty Scaling")
+## Extra enemy health per player level above 1 (0.08 = +8% each level).
+## Each map adds its own multiplier on top (see config/levels.gd).
+@export_range(0.0, 0.5, 0.01) var health_per_player_level: float = 0.08
+## Extra damage taken per player level above 1 (0.04 = +4% each level).
+@export_range(0.0, 0.5, 0.01) var damage_per_player_level: float = 0.04
+## Extra spawn rate per player level above 1 (0.03 = 3% more enemies each level).
+@export_range(0.0, 0.2, 0.01) var spawn_rate_per_player_level: float = 0.03
+## Spawning pauses at this many living enemies, so late runs stay playable.
+@export_range(50, 1000, 10) var max_enemies: int = 250
 
 @export_group("Player Speed")
 ## How fast the player moves at the start of a run (pixels/second).
@@ -25,6 +37,33 @@ extends Resource
 @export_range(1, 20) var frost_damage: int = 1
 ## Arcane Orbit damage per orb hit.
 @export_range(1, 20) var orbit_damage: int = 1
+## Warrior's Cleave damage per enemy hit.
+@export_range(1, 50) var cleave_damage: int = 1
+## Lancer's Lance Thrust damage per enemy hit.
+@export_range(1, 50) var thrust_damage: int = 1
+## Archer's Piercing Arrow damage per enemy hit.
+@export_range(1, 50) var arrow_damage: int = 1
+
+@export_group("Level-Up Weapons")
+## Highest level for Runeward Circle, Starfall, Moonreaver and Thornwake.
+@export_range(1, 10) var weapon_max_level: int = 5
+## Runeward Circle: damage per tick at level 1, and extra per level.
+@export_range(1, 20) var runeward_damage: int = 1
+@export_range(0, 10) var runeward_damage_per_level: int = 1
+## Runeward Circle: radius in pixels at level 1, and extra per level.
+@export_range(50.0, 400.0, 5.0) var runeward_radius: float = 130.0
+@export_range(0.0, 150.0, 5.0) var runeward_radius_per_level: float = 40.0
+## Runeward Circle: seconds between damage ticks.
+@export_range(0.1, 2.0, 0.05) var runeward_tick: float = 0.5
+## Starfall: damage at level 1, and extra per level.
+@export_range(1, 50) var starfall_damage: int = 3
+@export_range(0, 20) var starfall_damage_per_level: int = 2
+## Moonreaver: damage per pass at level 1, and extra per level.
+@export_range(1, 50) var moonreaver_damage: int = 2
+@export_range(0, 20) var moonreaver_damage_per_level: int = 1
+## Thornwake: damage per bramble tick at level 1, and extra per level.
+@export_range(1, 50) var thornwake_damage: int = 1
+@export_range(0, 20) var thornwake_damage_per_level: int = 1
 
 @export_group("Enemy Speed")
 ## Normal enemy move speed (pixels/second). Compare with Player Speed.

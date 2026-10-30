@@ -60,7 +60,16 @@ func _ready() -> void:
 		# bind passes the item into the handler — closure style.
 		button.pressed.connect(_on_item_pressed.bind(item))
 	%BackButton.pressed.connect(_on_back_pressed)
+	WindowControls.layout_changed.connect(fit_to_screen)
+	fit_to_screen()
 	refresh()
+
+func fit_to_screen() -> void:
+	# Mobile: wrapped buttons, and one column of them in portrait.
+	%HpButton.get_parent().columns = 1 if WindowControls.is_narrow() else 2
+	for slot in shop_items:
+		get_button(slot["button"]).autowrap_mode = TextServer.AUTOWRAP_WORD_SMART \
+			if WindowControls.mobile else TextServer.AUTOWRAP_OFF
 
 func get_button(name: String) -> Button:
 	# Unique-name lookup (%Name), so buttons can move around the layout.

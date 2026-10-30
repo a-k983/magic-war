@@ -7,16 +7,26 @@
 #
 # Usage (from the project folder):
 #   powershell -ExecutionPolicy Bypass -File tools\publish.ps1 "What changed"
-# Set $env:GODOT to use a different Godot executable.
+# Finds Godot on either of our PCs automatically (see $candidates below);
+# set $env:GODOT to override.
 
 param([string]$Message = "")
 
 $ErrorActionPreference = "Stop"
 Set-Location (Split-Path $PSScriptRoot -Parent)
 
+# Godot console exe: $env:GODOT if set, otherwise the first of these that
+# exists on this PC. Add a line here for any new machine.
+$candidates = @(
+    "D:\Godot\Godot_v4.7-stable_win64_console.exe",                         # Desktop (Alon)
+    "C:\Users\akore\OneDrive\Godot\Godot_v4.7-stable_win64_console.exe"     # Other PC (akore)
+)
 $godot = $env:GODOT
-if (-not $godot) { $godot = "C:\Users\akore\OneDrive\Godot\Godot_v4.7-stable_win64_console.exe" }
-if (-not (Test-Path $godot)) { throw "Godot not found at $godot - set `$env:GODOT to your Godot console exe." }
+if (-not $godot) { $godot = $candidates | Where-Object { Test-Path $_ } | Select-Object -First 1 }
+if (-not $godot -or -not (Test-Path $godot)) {
+    throw "Godot not found. Checked: $($candidates -join ', '). Set `$env:GODOT to your Godot console exe."
+}
+Write-Host "== Using Godot: $godot"
 if (-not $Message) { $Message = "Web build " + (Get-Date -Format "yyyy-MM-dd HH:mm") }
 
 Write-Host "== Exporting Web build..."

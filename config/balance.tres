@@ -8,3 +8,6 @@ fireball_damage = 20
 frost_damage = 2
 orbit_damage = 2
 enemy_health = 3
+cleave_damage = 20
+thrust_damage = 20
+arrow_damage = 14

@@ -15,6 +15,9 @@ var run_coins: int = 0   # Gold picked up in the current round only
 var pending_coins: float = 0.0  # Greed: gold owed minus paid (<= 0 = paid ahead)
 var endless: bool = false       # Mode of the run being started (set by the title screen)
 var endless_best: float = 0.0   # Longest endless survival, in seconds (saved)
+var level_index: int = 0        # Map of the run being started (index into Levels.MAPS)
+var levels_unlocked: int = 1    # How many maps can be played; a win adds the next (saved)
+var character: String = "monk"  # Id from Characters.ROSTER (saved)
 
 # Meta upgrade levels the player has purchased. Keys must match
 # the shop and player code.
@@ -47,6 +50,13 @@ func start_run() -> void:
 	run_coins = 0
 	pending_coins = 0.0
 	run_coins_changed.emit(run_coins)
+
+func is_level_unlocked(index: int) -> bool:
+	return index < levels_unlocked
+
+func complete_level(index: int) -> void:
+	# Winning a map opens the one after it. Replaying an old map changes nothing.
+	levels_unlocked = clampi(maxi(levels_unlocked, index + 2), 1, Levels.MAPS.size())
 
 func add_coins(amount: int) -> void:
 	# coin_gain (Greed) meta upgrade: every coin picked up is worth +25% per
@@ -82,6 +92,8 @@ func save_game() -> void:
 		"coins": coins,
 		"meta_upgrades": meta_upgrades,
 		"endless_best": endless_best,
+		"levels_unlocked": levels_unlocked,
+		"character": character,
 	}
 	var file := FileAccess.open(SAVE_PATH, FileAccess.WRITE)
 	file.store_string(JSON.stringify(data))
@@ -96,6 +108,8 @@ func load_game() -> void:
 		return  # Corrupted file — keep defaults rather than crash.
 	coins = int(data.get("coins", 0))
 	endless_best = float(data.get("endless_best", 0.0))
+	levels_unlocked = clampi(int(data.get("levels_unlocked", 1)), 1, Levels.MAPS.size())
+	character = Characters.by_id(str(data.get("character", "monk")))["id"]
 	# Merge saved levels into defaults (safe if we add new upgrades later).
 	var saved: Dictionary = data.get("meta_upgrades", {})
 	for key in meta_upgrades.keys():

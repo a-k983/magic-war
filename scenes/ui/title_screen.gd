@@ -17,9 +17,9 @@ func _ready() -> void:
 	%SettingsButton.pressed.connect(WindowControls.open_settings)
 
 func _on_play_pressed(endless: bool) -> void:
-	# main.tscn reads this to decide: 5-minute run or endless.
+	# The next screen and main.tscn read this: a map run or endless.
 	GameData.endless = endless
-	get_tree().change_scene_to_file("res://scenes/main.tscn")
+	get_tree().change_scene_to_file("res://scenes/ui/run_select.tscn")
 
 func _on_upgrades_pressed() -> void:
 	get_tree().change_scene_to_file("res://scenes/ui/upgrade_shop.tscn")

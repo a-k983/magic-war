@@ -1,36 +1,44 @@
 extends Node2D
-# World: the arena. Hand-placed props (village, camp, groves...) live as
-# child nodes in world.tscn. On top of those, this script adds:
+# World: the arena. The first map's hand-placed props (village, camp,
+# groves...) live as child nodes in world.tscn; the other maps swap those for
+# the landmarks listed in config/levels.gd. On top of those, this script adds:
 #   - invisible walls around the arena, hidden behind a thick tree line
 #   - scattered trees, rocks and bushes to fill the open ground
-# Scatter uses a fixed seed, so the map is identical every run. Change
-# `scatter_seed` for a different layout.
+# Scatter uses each map's fixed seed, so a map is identical every run.
 
 const PROP = preload("res://scenes/world/prop.gd")
 
 @export var half_size: float = 2400.0      # Arena spans -half..+half on both axes
-@export var scatter_seed: int = 7
-@export var scatter_trees: int = 40
-@export var scatter_rocks: int = 30
-@export var scatter_bushes: int = 70
 @export var spawn_clearing: float = 320.0  # Keep the player's start area open
 
+var map: Dictionary = Levels.MAPS[GameData.level_index]
 var rng := RandomNumberGenerator.new()
 # Where props already stand: x, y = position, z = how much room it needs
 # (bigger for buildings, so nothing gets wedged against their walls and
 # leaves a gap too narrow to walk through).
 var taken: Array[Vector3] = []
 
+func _enter_tree() -> void:
+	# Before the children's _ready, so hand-placed props build in the right colours.
+	PROP.building_colour = map["buildings"]
+	PROP.foliage = map["foliage"]
+
 func _ready() -> void:
-	rng.seed = scatter_seed
+	rng.seed = map["seed"]
+	if not map["landmarks"].is_empty():
+		for child in get_children():
+			child.free()
+		for landmark in map["landmarks"]:
+			add_prop(landmark[0], Vector2(landmark[1], landmark[2]), false)
 	for child in get_children():
 		var footprint: Vector2 = PROP.KINDS[child.kind][3]
 		taken.append(Vector3(child.position.x, child.position.y, footprint.length() * 0.5 + 40.0))
 	build_walls()
 	build_tree_line()
-	scatter(["tree1", "tree2", "tree3", "tree4"], scatter_trees, 150.0)
-	scatter(["rock1", "rock2", "rock3", "rock4", "stump"], scatter_rocks, 120.0)
-	scatter(["bush1", "bush2", "bush3"], scatter_bushes, 90.0)
+	var counts: Array = map["scatter"]
+	scatter(map["trees"], counts[0], 150.0)
+	scatter(map["rocks"], counts[1], 120.0)
+	scatter(["bush1", "bush2", "bush3"], counts[2], 90.0)
 
 func build_walls() -> void:
 	# Four long invisible boxes just outside the play area.
