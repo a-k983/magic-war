@@ -7,11 +7,13 @@ extends Node
 #      network says the player earned the reward (finish(false) otherwise).
 #
 # Until then, debug builds show a labelled test ad. Release builds have no ads:
-# is_available() is false, so the game hides every offer.
+# is_available() is false, so the game hides every offer. The one exception:
+# the Web build shows the test ad when the page address ends in ?testads=1,
+# so the offers can be checked on the live site.
 
 const TEST_AD_SECONDS: float = 5.0
 
-var enabled: bool = OS.is_debug_build()
+var enabled: bool = OS.is_debug_build() or web_test_ads_requested()
 var showing: bool = false
 var was_paused: bool = false
 var on_finished: Callable
@@ -23,6 +25,14 @@ var test_timer: float = 0.0
 func _ready() -> void:
 	# Keeps running while the game is paused behind the ad.
 	process_mode = Node.PROCESS_MODE_ALWAYS
+	if enabled and not OS.is_debug_build():
+		print("Ads: test ads on (?testads=1)")
+
+static func web_test_ads_requested() -> bool:
+	if not OS.has_feature("web"):
+		return false
+	var query: Variant = JavaScriptBridge.eval("window.location.search", true)
+	return query is String and "testads=1" in query
 
 func is_available() -> bool:
 	return enabled
