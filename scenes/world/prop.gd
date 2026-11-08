@@ -121,9 +121,11 @@ func build() -> void:
 	if footprint == Vector2.ZERO:
 		collision_layer = 0
 		return
-	# Layer 1 = everything already collides with it (player, enemies).
-	# Layer 3 (value 4) = "obstacles only", used to keep spawns out of props.
-	collision_layer = 1 | 4
+	# Layer 1 = enemies bump into it.
+	# Layer 3 (value 4) = blocks the player and keeps spawns out of props.
+	# Rocks use layer 4 (value 8) instead: the player walks over them, but
+	# enemies still bump into them and spawns still avoid them.
+	collision_layer = 1 | (8 if kind.begins_with("rock") else 4)
 	var shape := RectangleShape2D.new()
 	shape.size = footprint
 	var collider := CollisionShape2D.new()

@@ -226,7 +226,7 @@ func open_spot_near(center: Vector2, distance: float) -> Vector2:
 	# building/tree. Tries a few random angles before giving up.
 	var space := get_world_2d().direct_space_state
 	var query := PhysicsPointQueryParameters2D.new()
-	query.collision_mask = 4  # Obstacles only (see prop.gd)
+	query.collision_mask = 4 | 8  # Obstacles and rocks (see prop.gd)
 	var pos: Vector2 = Vector2.ZERO
 	for attempt in 8:
 		var angle: float = randf() * TAU
