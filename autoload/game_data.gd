@@ -4,6 +4,9 @@ extends Node
 # accessible from anywhere as `GameData`. Think of it as a global module.
 
 const SAVE_PATH: String = "user://savegame.json"
+# Where the save actually goes: SAVE_PATH, unless the game was started with
+# `-- --save-file=<path>` (test runs use that so they never touch the real save).
+var save_path: String = SAVE_PATH
 const BALANCE: Balance = preload("res://config/balance.tres")
 # "user://" = a per-user writable folder Godot manages for you.
 # On Windows it's under %APPDATA%\Godot\. Never save to res:// —
@@ -53,6 +56,9 @@ var meta_upgrades: Dictionary = {
 const MAX_UPGRADE_LEVEL: int = 10
 
 func _ready() -> void:
+	for arg in OS.get_cmdline_user_args():
+		if arg.begins_with("--save-file="):
+			save_path = arg.trim_prefix("--save-file=")
 	for entry in Characters.ROSTER:
 		if not entry.has("unlock"):
 			unlocked_characters.append(entry["id"])  # Starters
@@ -148,14 +154,14 @@ func save_game() -> void:
 		"unlocked_characters": unlocked_characters,
 		"new_unlocks": new_unlocks,
 	}
-	var file := FileAccess.open(SAVE_PATH, FileAccess.WRITE)
+	var file := FileAccess.open(save_path, FileAccess.WRITE)
 	file.store_string(JSON.stringify(data))
 	# File closes automatically when `file` goes out of scope.
 
 func load_game() -> void:
-	if not FileAccess.file_exists(SAVE_PATH):
+	if not FileAccess.file_exists(save_path):
 		return  # First launch — keep defaults.
-	var file := FileAccess.open(SAVE_PATH, FileAccess.READ)
+	var file := FileAccess.open(save_path, FileAccess.READ)
 	var data = JSON.parse_string(file.get_as_text())
 	if data == null:
 		return  # Corrupted file — keep defaults rather than crash.
