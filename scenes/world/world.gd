@@ -5,6 +5,7 @@ extends Node2D
 #   - invisible walls around the arena, hidden behind a thick tree line
 #   - scattered trees, rocks and bushes to fill the open ground
 # Scatter uses each map's fixed seed, so a map is identical every run.
+# Endless mode starts on the first map and drifts through the others: see morph().
 
 const PROP = preload("res://scenes/world/prop.gd")
 
@@ -17,6 +18,10 @@ var rng := RandomNumberGenerator.new()
 # (bigger for buildings, so nothing gets wedged against their walls and
 # leaves a gap too narrow to walk through).
 var taken: Array[Vector3] = []
+# Endless mode: every prop, so it can drift to the next map's look.
+# Each entry: [prop, scatter list ("trees"/"rocks", "" = keeps its kind),
+# slot in that list, map it shows now, blend point (0..1) it changes at].
+var morphs: Array = []
 
 func _enter_tree() -> void:
 	# Before the children's _ready, so hand-placed props build in the right colours.
@@ -33,12 +38,13 @@ func _ready() -> void:
 	for child in get_children():
 		var footprint: Vector2 = PROP.KINDS[child.kind][3]
 		taken.append(Vector3(child.position.x, child.position.y, footprint.length() * 0.5 + 40.0))
+		track(child, "", 0)
 	build_walls()
 	build_tree_line()
 	var counts: Array = map["scatter"]
-	scatter(map["trees"], counts[0], 150.0)
-	scatter(map["rocks"], counts[1], 120.0)
-	scatter(["bush1", "bush2", "bush3"], counts[2], 90.0)
+	scatter("trees", map["trees"], counts[0], 150.0)
+	scatter("rocks", map["rocks"], counts[1], 120.0)
+	scatter("", ["bush1", "bush2", "bush3"], counts[2], 90.0)
 
 func build_walls() -> void:
 	# Four long invisible boxes just outside the play area.
@@ -79,7 +85,7 @@ func perimeter_point(dist: float, t: float) -> Vector2:
 		return Vector2(dist - (t - side_len * 2.0), dist)
 	return Vector2(-dist, dist - (t - side_len * 3.0))
 
-func scatter(kinds: Array, count: int, min_gap: float) -> void:
+func scatter(group: String, kinds: Array, count: int, min_gap: float) -> void:
 	var placed: int = 0
 	var tries: int = 0
 	while placed < count and tries < count * 30:
@@ -88,7 +94,8 @@ func scatter(kinds: Array, count: int, min_gap: float) -> void:
 			rng.randf_range(-half_size + 120, half_size - 120))
 		if pos.length() < spawn_clearing or not is_clear(pos, min_gap):
 			continue
-		add_prop(kinds[rng.randi() % kinds.size()], pos, true)
+		var slot: int = rng.randi() % kinds.size()
+		add_prop(kinds[slot], pos, true, group, slot)
 		placed += 1
 
 func is_clear(pos: Vector2, min_gap: float) -> bool:
@@ -97,7 +104,7 @@ func is_clear(pos: Vector2, min_gap: float) -> bool:
 			return false
 	return true
 
-func add_prop(kind: String, pos: Vector2, remember: bool) -> void:
+func add_prop(kind: String, pos: Vector2, remember: bool, group: String = "", slot: int = 0) -> void:
 	var prop: StaticBody2D = PROP.new()
 	prop.kind = kind
 	prop.flip = rng.randf() < 0.5
@@ -105,6 +112,33 @@ func add_prop(kind: String, pos: Vector2, remember: bool) -> void:
 	add_child(prop)
 	if remember:
 		taken.append(Vector3(pos.x, pos.y, 30.0))
+	track(prop, group, slot)
+
+func track(prop: Node, group: String, slot: int) -> void:
+	if GameData.endless:
+		# randf(), not rng: the map's own scatter sequence must stay the same.
+		morphs.append([prop, group, slot, GameData.level_index, randf()])
+
+func morph(from: int, to: int, t: float, view: Rect2) -> void:
+	# Endless mode, called a few times a second. Foliage colour follows the
+	# blend everywhere; each prop switches to the next map's version once the
+	# blend passes its own point, but only while it's off-screen, so nothing
+	# visibly pops. Scattered trees and rocks become the new map's kinds.
+	PROP.foliage = Levels.MAPS[from]["foliage"].lerp(Levels.MAPS[to]["foliage"], t)
+	for entry in morphs:
+		var prop: StaticBody2D = entry[0]
+		prop.retint()
+		var wanted: int = to if t >= entry[4] else from
+		if entry[3] == wanted or view.has_point(prop.position):
+			continue
+		entry[3] = wanted
+		var look: Dictionary = Levels.MAPS[wanted]
+		prop.colour_override = look["buildings"]
+		if entry[1] != "":
+			var kinds: Array = look[entry[1]]
+			prop.kind = kinds[entry[2] % kinds.size()]  # The setter rebuilds it
+		else:
+			prop.build()
 
 func clamp_to_arena(pos: Vector2, margin: float) -> Vector2:
 	var limit: float = half_size - margin

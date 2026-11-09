@@ -12,6 +12,14 @@ extends Resource
 ## this time, so every map shows all five however long the run is.
 @export_range(0.5, 30.0, 0.5) var win_time_minutes: float = 5.0
 
+@export_group("Endless Mode")
+## Minutes endless mode stays on one map before it starts drifting to the next.
+## Maps go in play order and loop back to the first after the last.
+@export_range(0.5, 30.0, 0.5) var endless_map_minutes: float = 3.5
+## Minutes the drift into the next map takes: the ground and foliage colours
+## blend, and buildings, trees and rocks change a few at a time while off-screen.
+@export_range(0.1, 10.0, 0.1) var endless_blend_minutes: float = 1.5
+
 @export_group("Difficulty Scaling")
 ## Extra enemy health per player level above 1 (0.08 = +8% each level).
 ## Each map adds its own multiplier on top (see config/levels.gd).

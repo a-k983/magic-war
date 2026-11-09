@@ -133,8 +133,9 @@ const MAPS: Array[Dictionary] = [
 	},
 ]
 
-# Endless mode plays on the first map and cycles through every enemy above,
-# a little of each map at a time, so a long run sees the whole bestiary.
+# Endless mode starts on the first map and slowly drifts through the others
+# (main.gd drift_map), and cycles through every enemy above, a little of
+# each map at a time, so a long run sees the whole bestiary.
 static func endless_enemies() -> Array[Dictionary]:
 	var order: Array[Dictionary] = []
 	for slot in 5:

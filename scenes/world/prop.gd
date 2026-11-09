@@ -14,6 +14,10 @@ const EXTRA := "res://scenes/assets/Tiny Swords (Enemy Pack)/Tiny Swords (Enemy 
 static var building_colour: String = "Blue"
 static var foliage: Color = Color.WHITE
 
+# Endless mode: this prop's own building colour once it has drifted to
+# another map ("" = the shared building_colour above).
+var colour_override: String = ""
+
 # kind: [texture, frames in the sheet, base row (y pixel where it meets the
 #        ground), footprint size (solid area at the base; ZERO = walk-through)]
 const KINDS: Dictionary = {
@@ -82,14 +86,15 @@ func build() -> void:
 
 	var data: Array = KINDS[kind]
 	var path: String = data[0] if data[0].begins_with("res://") else ART + data[0]
-	var sheet: Texture2D = load(path.replace("Blue Buildings", building_colour + " Buildings"))
+	var colour: String = colour_override if colour_override != "" else building_colour
+	var sheet: Texture2D = load(path.replace("Blue Buildings", colour + " Buildings"))
 	var frame_count: int = data[1]
 	var frame_w: float = sheet.get_width() / float(frame_count)
 	var frame_h: float = sheet.get_height()
 	# Shift the art up so its base row sits on our origin — that's what
 	# makes y-sorting (who's drawn in front) line up with the ground.
 	var offset := Vector2(0, frame_h / 2.0 - data[2])
-	var tint: Color = foliage if kind.begins_with("tree") or kind.begins_with("bush") else Color.WHITE
+	var tint: Color = foliage if is_foliage() else Color.WHITE
 
 	if frame_count == 1:
 		var sprite := Sprite2D.new()
@@ -132,3 +137,14 @@ func build() -> void:
 	collider.shape = shape
 	collider.position = Vector2(0, -footprint.y / 2.0)  # Sits on top of the base line
 	add_child(collider)
+
+func is_foliage() -> bool:
+	return kind.begins_with("tree") or kind.begins_with("bush")
+
+func retint() -> void:
+	# Endless mode: catch up with the shared foliage colour as it blends.
+	if not is_foliage():
+		return
+	for child in get_children():
+		if child is Node2D and not child is CollisionShape2D:
+			child.modulate = foliage

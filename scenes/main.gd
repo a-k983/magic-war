@@ -30,6 +30,8 @@ var frames_cache: Dictionary = {}           # Enemy type name -> SpriteFrames
 var kills: int = 0                          # Enemies killed this run (HUD, top right)
 var revives_left: int = BALANCE.revives_per_run
 var revive_offer: CanvasLayer
+var map_stage: int = 0                      # Endless: how many maps it has moved on
+var morph_wait: float = 0.0                 # Endless: seconds until the next World.morph
 
 func _ready() -> void:
 	endless = GameData.endless
@@ -108,11 +110,37 @@ func _process(delta: float) -> void:
 		update_damage_bonus()
 	if endless:
 		$HUD/TimerLabel.text += "  ·  Wave %d" % (wave + 1)
+		drift_map(delta)
 
 	# Elite alarm.
 	if elapsed >= next_elite_at:
 		next_elite_at += elite_interval
 		spawn_elite()
+
+func drift_map(delta: float) -> void:
+	# Endless: hold each map for a while, then drift slowly into the next one
+	# (see the Endless Mode knobs in balance.tres). Loops back after the last.
+	var hold: float = BALANCE.endless_map_minutes * 60.0
+	var blend: float = BALANCE.endless_blend_minutes * 60.0
+	var stage: int = int(elapsed / (hold + blend))
+	var into: float = elapsed - stage * (hold + blend)
+	var from: int = stage % Levels.MAPS.size()
+	var to: int = (stage + 1) % Levels.MAPS.size()
+	var t: float = smoothstep(hold, hold + blend, into)
+	$Ground.modulate = Levels.MAPS[from]["ground"].lerp(Levels.MAPS[to]["ground"], t)
+	if stage != map_stage:
+		map_stage = stage
+		show_map_banner(Levels.MAPS[from]["name"].to_upper())  # Fully arrived
+	morph_wait -= delta
+	if morph_wait <= 0.0:
+		morph_wait = 0.25
+		$World.morph(from, to, t, camera_view())
+
+func camera_view() -> Rect2:
+	# What the camera sees, plus a margin so props change well out of sight.
+	var camera: Camera2D = player.get_node("Camera2D")
+	var half: Vector2 = get_viewport_rect().size / camera.zoom * 0.5 + Vector2(300, 300)
+	return Rect2(camera.get_screen_center_position() - half, half * 2.0)
 
 func _notification(what: int) -> void:
 	# Phone call, app switch, tab hidden: pause rather than die off-screen.
@@ -320,10 +348,13 @@ func fit_hud() -> void:
 	clock.offset_top = 92.0 if WindowControls.is_narrow() else 26.0
 	clock.offset_bottom = clock.offset_top + 60.0
 
-func show_map_banner() -> void:
-	# The map's name fades out over the first few seconds of a run.
+func show_map_banner(text: String = "") -> void:
+	# The map's name fades out over the first few seconds of a run (and in
+	# endless, again each time it reaches a new map).
 	var banner := Label.new()
-	banner.text = "ENDLESS" if endless else map["name"].to_upper()
+	if text == "":
+		text = "ENDLESS" if endless else map["name"].to_upper()
+	banner.text = text
 	banner.theme_type_variation = &"GoldRibbon"
 	banner.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	banner.anchor_left = 0.5
