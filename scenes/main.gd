@@ -163,12 +163,14 @@ func _on_leveled_up(new_level: int) -> void:
 
 func check_unlocks() -> void:
 	# Endless milestones (config/characters.gd) unlock heroes for both modes.
-	# GameData saves at once; the toast celebrates it right here, mid-run.
+	# GameData saves at once and the toast celebrates it without pausing
+	# anything. The run carries on with the hero it started with: the new one
+	# is only offered on the hero select screen, for the next run.
 	var fresh: Array[String] = GameData.check_endless_unlocks(player.level, elapsed)
 	for i in fresh.size():
 		var toast: CanvasLayer = UNLOCK_TOAST.new()
 		toast.character = Characters.by_id(fresh[i])
-		toast.delay = i * 4.0
+		toast.delay = i * 5.5
 		add_child(toast)
 
 func levels_gained() -> int:
