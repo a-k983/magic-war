@@ -105,3 +105,11 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 28
 text = "Settings"
 icon = ExtResource("6_gear")
+
+[node name="ResetButton" type="Button" parent="CenterContainer/VBoxContainer/Menu/VBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(360, 54)
+layout_mode = 2
+theme_type_variation = &"RedButton"
+theme_override_font_sizes/font_size = 22
+text = "Reset Upgrades"

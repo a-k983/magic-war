@@ -94,6 +94,24 @@ func try_purchase(id: String) -> bool:
 	save_game()
 	return true
 
+func spent_on_upgrades() -> int:
+	# Level L cost 10 + 20 + ... + 10L = 5 * L * (L + 1) in total.
+	var total: int = 0
+	for id in meta_upgrades:
+		var level: int = meta_upgrades[id]
+		total += 5 * level * (level + 1)
+	return total
+
+func reset_upgrades() -> int:
+	# Title screen's Reset Upgrades: every upgrade back to 0, every coin spent
+	# on them refunded. Returns the refund.
+	var refund: int = spent_on_upgrades()
+	coins += refund
+	for id in meta_upgrades:
+		meta_upgrades[id] = 0
+	save_game()
+	return refund
+
 func save_game() -> void:
 	var data: Dictionary = {
 		"coins": coins,
