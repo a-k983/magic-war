@@ -6,6 +6,7 @@ const ENEMY_SCENE: PackedScene = preload("res://scenes/enemies/enemy.tscn")
 const BALANCE: Balance = preload("res://config/balance.tres")
 const REVIVE_OFFER = preload("res://scenes/ui/revive_offer.gd")
 const BOOST_OFFER = preload("res://scenes/ui/boost_offer.gd")
+const UNLOCK_TOAST = preload("res://scenes/ui/unlock_toast.gd")
 
 @export var spawn_distance: float = 800.0
 @export var elite_interval: float = 60.0    # An elite every minute
@@ -111,6 +112,7 @@ func _process(delta: float) -> void:
 	if endless:
 		$HUD/TimerLabel.text += "  ·  Wave %d" % (wave + 1)
 		drift_map(delta)
+		check_unlocks()
 
 	# Elite alarm.
 	if elapsed >= next_elite_at:
@@ -156,6 +158,18 @@ func _on_leveled_up(new_level: int) -> void:
 	$HUD/LevelLabel.text = "Level %d" % new_level
 	update_damage_bonus()
 	$LevelUpMenu.open()
+	if endless:
+		check_unlocks()  # Level milestones count the moment they're reached
+
+func check_unlocks() -> void:
+	# Endless milestones (config/characters.gd) unlock heroes for both modes.
+	# GameData saves at once; the toast celebrates it right here, mid-run.
+	var fresh: Array[String] = GameData.check_endless_unlocks(player.level, elapsed)
+	for i in fresh.size():
+		var toast: CanvasLayer = UNLOCK_TOAST.new()
+		toast.character = Characters.by_id(fresh[i])
+		toast.delay = i * 4.0
+		add_child(toast)
 
 func levels_gained() -> int:
 	return player.level - 1

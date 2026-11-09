@@ -18,7 +18,13 @@ var endless: bool = false       # Mode of the run being started (set by the titl
 var endless_best: float = 0.0   # Longest endless survival, in seconds (saved)
 var level_index: int = 0        # Map of the run being started (index into Levels.MAPS)
 var levels_unlocked: int = 1    # How many maps can be played; a win adds the next (saved)
-var character: String = "monk"  # Id from Characters.ROSTER (saved)
+var character: String = "warrior"  # Id from Characters.ROSTER (saved)
+# Characters the player may pick (saved, shared by both modes). Only ever
+# grows: nothing removes an id, and loading merges with what's saved.
+var unlocked_characters: Array[String] = []
+# Unlocked but not yet celebrated on the hero select screen (saved), so the
+# lock-break plays there even if the game was closed in between.
+var new_unlocks: Array[String] = []
 var active_boost: String = ""   # Ad boost running now: "gold", "xp", "drops" or ""
 var shop_from_run: bool = false # Upgrade shop opened from the game-over screen (Back = play again)
 
@@ -47,7 +53,27 @@ var meta_upgrades: Dictionary = {
 const MAX_UPGRADE_LEVEL: int = 10
 
 func _ready() -> void:
+	for entry in Characters.ROSTER:
+		if not entry.has("unlock"):
+			unlocked_characters.append(entry["id"])  # Starters
 	load_game()
+
+func is_character_unlocked(id: String) -> bool:
+	return id in unlocked_characters
+
+func check_endless_unlocks(level: int, seconds: float) -> Array[String]:
+	# Called during Endless matches. Unlocks (and saves at once) every
+	# character whose milestone this match has reached; returns the new ones.
+	var fresh: Array[String] = []
+	for entry in Characters.ROSTER:
+		var id: String = entry["id"]
+		if not is_character_unlocked(id) and Characters.milestone_reached(entry, level, seconds):
+			unlocked_characters.append(id)
+			new_unlocks.append(id)
+			fresh.append(id)
+	if not fresh.is_empty():
+		save_game()
+	return fresh
 
 func start_run() -> void:
 	run_coins = 0
@@ -119,6 +145,8 @@ func save_game() -> void:
 		"endless_best": endless_best,
 		"levels_unlocked": levels_unlocked,
 		"character": character,
+		"unlocked_characters": unlocked_characters,
+		"new_unlocks": new_unlocks,
 	}
 	var file := FileAccess.open(SAVE_PATH, FileAccess.WRITE)
 	file.store_string(JSON.stringify(data))
@@ -134,7 +162,16 @@ func load_game() -> void:
 	coins = int(data.get("coins", 0))
 	endless_best = float(data.get("endless_best", 0.0))
 	levels_unlocked = clampi(int(data.get("levels_unlocked", 1)), 1, Levels.MAPS.size())
-	character = Characters.by_id(str(data.get("character", "monk")))["id"]
+	# Add saved unlocks to the starters; never drop one that's already there.
+	for id in data.get("unlocked_characters", []):
+		if not is_character_unlocked(str(id)) and Characters.by_id(str(id))["id"] == str(id):
+			unlocked_characters.append(str(id))
+	for id in data.get("new_unlocks", []):
+		if is_character_unlocked(str(id)) and not str(id) in new_unlocks:
+			new_unlocks.append(str(id))
+	character = Characters.by_id(str(data.get("character", "warrior")))["id"]
+	if not is_character_unlocked(character):
+		character = "warrior"  # A save from before unlocks existed
 	# Merge saved levels into defaults (safe if we add new upgrades later).
 	var saved: Dictionary = data.get("meta_upgrades", {})
 	for key in meta_upgrades.keys():

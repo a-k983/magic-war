@@ -43,7 +43,7 @@ extends Resource
 ## Seconds into a run before the first boost offer.
 @export_range(0.0, 300.0, 5.0) var boost_first_offer: float = 30.0
 ## How long a boost offer stays on screen, in seconds.
-@export_range(3.0, 30.0, 1.0) var boost_offer_seconds: float = 10.0
+@export_range(3.0, 30.0, 1.0) var boost_offer_seconds: float = 15.0
 ## Seconds until the next offer, after one is ignored or a boost runs out.
 @export_range(10.0, 600.0, 5.0) var boost_offer_gap: float = 120.0
 

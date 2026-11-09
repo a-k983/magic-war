@@ -130,13 +130,17 @@ func build() -> void:
 	# Layer 3 (value 4) = blocks the player and keeps spawns out of props.
 	# Rocks use layer 4 (value 8) instead: the player walks over them, but
 	# enemies still bump into them and spawns still avoid them.
-	collision_layer = 1 | (8 if kind.begins_with("rock") else 4)
+	collision_layer = 1 | (8 if is_rock() else 4)
 	var shape := RectangleShape2D.new()
 	shape.size = footprint
 	var collider := CollisionShape2D.new()
 	collider.shape = shape
 	collider.position = Vector2(0, -footprint.y / 2.0)  # Sits on top of the base line
 	add_child(collider)
+
+func is_rock() -> bool:
+	# Every rock on every map, gold stones included: the player walks through.
+	return kind.begins_with("rock") or kind.begins_with("gold_stone")
 
 func is_foliage() -> bool:
 	return kind.begins_with("tree") or kind.begins_with("bush")
