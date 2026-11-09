@@ -20,6 +20,7 @@ var level_index: int = 0        # Map of the run being started (index into Level
 var levels_unlocked: int = 1    # How many maps can be played; a win adds the next (saved)
 var character: String = "monk"  # Id from Characters.ROSTER (saved)
 var active_boost: String = ""   # Ad boost running now: "gold", "xp", "drops" or ""
+var shop_from_run: bool = false # Upgrade shop opened from the game-over screen (Back = play again)
 
 # Meta upgrade levels the player has purchased. Keys must match
 # the shop and player code.

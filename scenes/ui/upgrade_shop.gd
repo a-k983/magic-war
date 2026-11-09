@@ -60,6 +60,8 @@ func _ready() -> void:
 		# bind passes the item into the handler — closure style.
 		button.pressed.connect(_on_item_pressed.bind(item))
 	%BackButton.pressed.connect(_on_back_pressed)
+	if GameData.shop_from_run:
+		%BackButton.text = "Play Again"
 	WindowControls.layout_changed.connect(fit_to_screen)
 	fit_to_screen()
 	refresh()
@@ -106,4 +108,9 @@ func _on_item_pressed(slot: Dictionary) -> void:
 		refresh()  # Purchase already saved to disk inside try_purchase
 
 func _on_back_pressed() -> void:
+	# Opened from the game-over screen: go straight back into the same run.
+	if GameData.shop_from_run:
+		GameData.shop_from_run = false
+		get_tree().change_scene_to_file("res://scenes/main.tscn")
+		return
 	get_tree().change_scene_to_file("res://scenes/ui/title_screen.tscn")

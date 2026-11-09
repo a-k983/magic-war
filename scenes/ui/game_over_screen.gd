@@ -9,6 +9,7 @@ func _ready() -> void:
 	visible = false
 	%RestartButton.pressed.connect(_on_restart_pressed)
 	%NextButton.pressed.connect(_on_next_pressed)
+	%UpgradesButton.pressed.connect(_on_upgrades_pressed)
 	%MenuButton.pressed.connect(_on_menu_pressed)
 
 func open(message: String, stats: Dictionary = {}) -> void:
@@ -47,7 +48,7 @@ func fit_to_screen() -> void:
 	%ResultLabel.custom_minimum_size.x = 490.0 if narrow else 0.0
 	if not narrow:
 		return
-	for button: Button in [%NextButton, %RestartButton, %MenuButton]:
+	for button: Button in [%NextButton, %RestartButton, %UpgradesButton, %MenuButton]:
 		button.custom_minimum_size.x = 155.0
 		button.icon = null
 
@@ -69,6 +70,12 @@ func _on_next_pressed() -> void:
 	GameData.level_index = next_level
 	get_tree().paused = false
 	get_tree().reload_current_scene()
+
+func _on_upgrades_pressed() -> void:
+	# Spend the gold right away; the shop's Back button then replays this run.
+	GameData.shop_from_run = true
+	get_tree().paused = false
+	get_tree().change_scene_to_file("res://scenes/ui/upgrade_shop.tscn")
 
 func _on_menu_pressed() -> void:
 	get_tree().paused = false
