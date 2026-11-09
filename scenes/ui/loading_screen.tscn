@@ -1,8 +1,6 @@
 [gd_scene format=3]
 
 [ext_resource type="Script" path="res://scenes/ui/loading_screen.gd" id="1_script"]
-[ext_resource type="Texture2D" uid="uid://cryhyeg6nx81m" path="res://scenes/assets/Tiny Swords (Free Pack)/Tiny Swords (Free Pack)/Terrain/Tileset/Tilemap_color5_single_grazz_tile.png" id="2_grass"]
-[ext_resource type="Texture2D" uid="uid://botikuu6rsd1m" path="res://scenes/ui/skin/bar_small.png" id="3_barsmall"]
 
 [node name="LoadingScreen" type="Control"]
 layout_mode = 3
@@ -12,75 +10,3 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_script")
-
-[node name="Background" type="TextureRect" parent="."]
-modulate = Color(0.55, 0.6, 0.4, 1)
-texture_repeat = 2
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-texture = ExtResource("2_grass")
-stretch_mode = 1
-
-[node name="CenterContainer" type="CenterContainer" parent="."]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer"]
-layout_mode = 2
-theme_override_constants/separation = 8
-
-[node name="TitleLabel" type="Label" parent="CenterContainer/VBoxContainer"]
-layout_mode = 2
-theme_type_variation = &"TitleRibbon"
-text = "MAGIC WAR"
-horizontal_alignment = 1
-
-[node name="Panel" type="PanelContainer" parent="CenterContainer/VBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 4
-theme_type_variation = &"BannerPanel"
-
-[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/VBoxContainer/Panel"]
-layout_mode = 2
-theme_override_constants/separation = 18
-
-[node name="LoadingLabel" type="Label" parent="CenterContainer/VBoxContainer/Panel/VBoxContainer"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(360, 0)
-layout_mode = 2
-theme_type_variation = &"DarkLabel"
-theme_override_font_sizes/font_size = 28
-text = "Loading"
-horizontal_alignment = 1
-
-[node name="LoadBar" type="ProgressBar" parent="CenterContainer/VBoxContainer/Panel/VBoxContainer"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(340, 12)
-layout_mode = 2
-size_flags_horizontal = 4
-theme_type_variation = &"XPBar"
-show_percentage = false
-
-[node name="Frame" type="NinePatchRect" parent="CenterContainer/VBoxContainer/Panel/VBoxContainer/LoadBar"]
-show_behind_parent = true
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = -10.0
-offset_top = -8.0
-offset_right = 10.0
-offset_bottom = 5.0
-grow_horizontal = 2
-grow_vertical = 2
-texture = ExtResource("3_barsmall")
-patch_margin_left = 15
-patch_margin_right = 15
